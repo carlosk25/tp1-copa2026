@@ -1,0 +1,23 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Compilados
+*.class
+
+# Logs
+*.log
+
+# Pacotes
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
