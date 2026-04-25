@@ -32,11 +32,11 @@ src/main/java/br/unb/cic0197/copa2026/
 ## Equipe
 
 | Nome | Módulo |
-|------|--------|
-|      | Administração e Gestão |
-|      | Seleções e Jogadores |
-|      | Estádios e Arbitragem |
-|      | Partidas |
+|---------|-----------|
+| Daniel  | Administração e Gestão |
+| Carlos  | Seleções e Jogadores |
+| Gabriel | Estádios e Arbitragem |
+| João    | Partidas |
 
 ## Disciplina
 
