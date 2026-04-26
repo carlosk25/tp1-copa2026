@@ -8,35 +8,43 @@ Sistema computacional para apoiar e automatizar os principais processos relacion
 
 ## Tecnologias
 
-- Java
+- Java 21
 - Maven
 - IntelliJ IDEA
 - Swing
 
 ## Estrutura do Projeto
+
+```text
 src/main/java/br/unb/cic0197/copa2026/
-├── app/          # Ponto de entrada da aplicação
-├── controller/   # Ponte entre a view e o service
-├── model/        # Entidades do domínio
-├── view/         # Telas da aplicação
-├── service/      # Regras de negócio
-├── repository/   # Persistência de dados em arquivos
-└── exception/    # Exceções personalizadas
+├── app/ # Ponto de entrada da aplicação
+├── controller/ # Ponte entre a view e o service
+├── model/ # Entidades do domínio
+├── view/ # Telas da aplicação
+├── service/ # Regras de negócio
+├── repository/ # Persistência de dados em arquivos
+└── exception/ # Exceções personalizadas
+```
 
 ## Como Executar
 
 1. Clone o repositório
 2. Abra no IntelliJ IDEA
-3. Execute a classe `Main`
+3. Execute os comandos:
+
+```bash
+   mvn clean compile
+   java -cp target/classes br.unb.cic0197.copa2026.app.Main
+```
 
 ## Equipe
 
-| Nome | Módulo |
-|---------|-----------|
+| Nome    | Módulo                 |
+| ------- | ---------------------- |
 | Daniel  | Administração e Gestão |
-| Carlos  | Seleções e Jogadores |
-| Gabriel | Estádios e Arbitragem |
-| João    | Partidas |
+| Carlos  | Seleções e Jogadores   |
+| Gabriel | Estádios e Arbitragem  |
+| João    | Partidas               |
 
 ## Disciplina
 
