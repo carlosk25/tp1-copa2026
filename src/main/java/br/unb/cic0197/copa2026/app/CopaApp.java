@@ -25,6 +25,9 @@ public class CopaApp extends JFrame {
         contentPanel.removeAll();
 
         switch(telaNome) {
+            case "login":
+                contentPanel.add(new TelaLogin());
+                break;
             case "partida":
                 contentPanel.add(new TelaPartida());
                 break;
