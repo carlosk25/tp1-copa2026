@@ -17,6 +17,7 @@ public class CopaApp extends JFrame {
     }
 
     public void start() {
+        // Você pode mudar para "login" se quiser que comece pela tela de login
         mostrarTela("menu");
         setVisible(true);
     }
@@ -25,6 +26,9 @@ public class CopaApp extends JFrame {
         contentPanel.removeAll();
 
         switch(telaNome) {
+            case "login":
+                contentPanel.add(new TelaLogin(this));
+                break;
             case "partida":
                 contentPanel.add(new TelaPartida());
                 break;
@@ -33,6 +37,12 @@ public class CopaApp extends JFrame {
                 break;
             case "selecao":
                 contentPanel.add(new TelaSelecao(this));
+                break;
+            case "estadio":
+                contentPanel.add(new EstadioView(this));
+                break;
+            case "arbitro":
+                contentPanel.add(new ArbitroView(this));
                 break;
             default:
                 contentPanel.add(criarTelaMenu());
@@ -44,5 +54,11 @@ public class CopaApp extends JFrame {
 
     private JPanel criarTelaMenu() {
         return new TelaMenu(this);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new CopaApp().start();
+        });
     }
 }

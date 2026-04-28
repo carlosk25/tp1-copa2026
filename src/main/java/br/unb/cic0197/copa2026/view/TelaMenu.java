@@ -15,5 +15,13 @@ public class TelaMenu extends JPanel {
         btnSelecao.addActionListener(e -> app.mostrarTela("selecao"));
 
         add(btnSelecao);
+
+        JButton btnEstadio = new JButton("Gerenciar Estádios");
+        btnEstadio.addActionListener(e -> app.mostrarTela("estadio"));
+        add(btnEstadio);
+
+        JButton btnArbitro = new JButton("Gerenciar Árbitros");
+        btnArbitro.addActionListener(e -> app.mostrarTela("arbitro"));
+        add(btnArbitro);
     }
 }

@@ -1,35 +1,29 @@
 package br.unb.cic0197.copa2026.view;
 
+import br.unb.cic0197.copa2026.app.CopaApp;
 import javax.swing.*;
 import java.awt.*;
 
-public class ArbitroView extends JFrame {
+public class ArbitroView extends JPanel {
     private JTextField txtNome = new JTextField(20);
     private JTextField txtNacionalidade = new JTextField(20);
     private JTextField txtExperiencia = new JTextField(10);
     private JButton btnSalvar = new JButton("Salvar Árbitro");
 
-    public ArbitroView() {
-        setTitle("Copa 2026 - Gestão de Árbitros");
-        setSize(400, 250);
-        setLayout(new GridLayout(4, 2, 10, 10));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    public ArbitroView(CopaApp app) {
+        setLayout(new GridLayout(5, 2, 10, 10));
 
         add(new JLabel(" Nome do Árbitro:"));
-        add(txtNome);
+        add(txtNome);// Mudou para JPanel
         add(new JLabel(" Nacionalidade:"));
         add(txtNacionalidade);
         add(new JLabel(" Experiência (Anos):"));
         add(txtExperiencia);
 
-        add(new JLabel(""));
+        JButton btnVoltar = new JButton("Voltar ao Menu");
+        btnVoltar.addActionListener(e -> app.mostrarTela("menu"));
+
+        add(btnVoltar);
         add(btnSalvar);
-
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new ArbitroView();
     }
 }
