@@ -11,9 +11,14 @@ public class TelaMenu extends JPanel {
 
         add(btnPartidas);
 
-        JButton btnSelecao = new JButton("Gerenciar Seleções");
-        btnSelecao.addActionListener(e -> app.mostrarTela("selecao"));
+        JButton btnSelecoes = new JButton("Gerenciar Seleções");
+        btnSelecoes.addActionListener(e -> app.mostrarTela("selecao"));
 
-        add(btnSelecao);
+        add(btnSelecoes);
+
+        JButton btnJogadores = new JButton("Gerenciar Jogadores");
+        btnJogadores.addActionListener(e -> app.mostrarTela("jogador"));
+
+        add(btnJogadores);
     }
 }

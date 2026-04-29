@@ -34,6 +34,9 @@ public class CopaApp extends JFrame {
             case "selecao":
                 contentPanel.add(new TelaSelecao(this));
                 break;
+            case "jogador" :
+                contentPanel.add(new TelaJogadores(this));
+                break;
             default:
                 contentPanel.add(criarTelaMenu());
         }
