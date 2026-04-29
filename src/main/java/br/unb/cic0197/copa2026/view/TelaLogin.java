@@ -2,6 +2,7 @@ package br.unb.cic0197.copa2026.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage; 
 
 public class TelaLogin extends JFrame {
 
@@ -11,22 +12,36 @@ public class TelaLogin extends JFrame {
 
     public TelaLogin() {
         setTitle("Login - Copa 2026");
-        setSize(350, 200);
-        setLayout(new GridLayout(3, 2, 10, 10));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(550, 450);
+        setLayout(new GridBagLayout()); 
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); 
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(new JLabel("Usuário:"));
-        add(txtUsuario);
+       
+        gbc.gridx = 0; gbc.gridy = 0;
+        add(new JLabel("Usuário:"), gbc);
+        gbc.gridx = 1;
+        add(txtUsuario, gbc);
 
-        add(new JLabel("Senha:"));
-        add(txtSenha);
+        
+        gbc.gridx = 0; gbc.gridy = 1;
+        add(new JLabel("Senha:"), gbc);
+        gbc.gridx = 1;
+        add(txtSenha, gbc);
 
-        add(new JLabel(""));
-        add(btnLogin);
+        
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridwidth = 2; 
+        gbc.fill = GridBagConstraints.NONE; 
+        add(btnLogin, gbc);
+
+        Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        setIconImage(icon);
 
         setLocationRelativeTo(null);
-        setVisible(true);
     }
+
 
     public static void main(String[] args) {
         new TelaLogin();
