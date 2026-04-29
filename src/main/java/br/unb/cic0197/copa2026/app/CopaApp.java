@@ -44,6 +44,9 @@ public class CopaApp extends JFrame {
             case "arbitro":
                 contentPanel.add(new ArbitroView(this));
                 break;
+            case "jogador" :
+                contentPanel.add(new TelaJogadores(this));
+                break;
             default:
                 contentPanel.add(criarTelaMenu());
         }

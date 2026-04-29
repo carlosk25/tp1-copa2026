@@ -9,26 +9,26 @@ public class TelaSelecao extends JPanel {
     public TelaSelecao(CopaApp app) {
         setLayout(new GridLayout(0, 2, 10, 10));
 
-        add(new JLabel("Nome da Seleção:"));
-        JTextField txtNome = new JTextField();
-        add(txtNome);
+        add(new JLabel("País:"));
+        JTextField txtPais = new JTextField();
+        add(txtPais);
+
+        add(new JLabel("Grupo:"));
+        JTextField txtGrupo = new JTextField();
+        add(txtGrupo);
 
         add(new JLabel("Técnico:"));
         JTextField txtTecnico = new JTextField();
         add(txtTecnico);
 
-        add(new JLabel("Número de Jogadores:"));
-        JTextField txtNumero = new JTextField();
-        add(txtNumero);
-
         JButton btnAdicionar = new JButton("Adicionar");
         add(btnAdicionar);
 
-        JButton btnEditar = new JButton("Editar");
-        add(btnEditar);
-
         JButton btnListar = new JButton("Listar");
         add(btnListar);
+
+        JButton btnEditar = new JButton("Editar");
+        add(btnEditar);
 
         JButton btnExcluir = new JButton("Excluir");
         add(btnExcluir);
