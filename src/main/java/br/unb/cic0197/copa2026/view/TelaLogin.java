@@ -11,7 +11,7 @@ public class TelaLogin extends JFrame {
     private JButton btnLogin = new JButton("Entrar");
 
     public TelaLogin() {
-        setTitle("Login - Copa 2026");
+        setTitle("Copa 2026");
         setSize(550, 450);
         setLayout(new GridBagLayout()); 
         GridBagConstraints gbc = new GridBagConstraints();
