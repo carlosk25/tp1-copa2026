@@ -1,7 +1,13 @@
-public class CadastroView extends JPanel {
+package br.unb.cic0197.copa2026.view;
+
+import br.unb.cic0197.copa2026.app.CopaApp;
+import javax.swing.*;
+import java.awt.*;
+
+public class TelaCadastro extends JPanel {
     private CopaApp app;
 
-    public CadastroView(CopaApp app) {
+    public TelaCadastro(CopaApp app) {
         this.app = app;
         setLayout(new GridLayout(9, 2, 10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
