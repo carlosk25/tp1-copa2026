@@ -2,66 +2,62 @@ package br.unb.cic0197.copa2026.app;
 
 import br.unb.cic0197.copa2026.view.*;
 import javax.swing.*;
+import java.awt.*;
+import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.image.BufferedImage;
 
 public class CopaApp extends JFrame {
-    private JPanel contentPanel;
+    private CardLayout cardLayout;
+    private JPanel container;
 
     public CopaApp() {
-        setTitle("Copa 2026");
+        initUI();
+        setupScreens();
+    }
+
+    private void initUI() {
+        setTitle("Copa 2026 - Sistema de Gerenciamento");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1200, 700);
         setLocationRelativeTo(null);
+        
+        BufferedImage imageVizia = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        setIconImage(imageVizia);
 
-        contentPanel = new JPanel();
-        setContentPane(contentPanel);
-    }
+        cardLayout = new CardLayout();
+        container = new JPanel(cardLayout);
 
-    public void start() {
-        // Você pode mudar para "login" se quiser que comece pela tela de login
-        mostrarTela("menu");
-        setVisible(true);
-    }
-
-    public void mostrarTela(String telaNome) {
-        contentPanel.removeAll();
-
-        switch(telaNome) {
-            case "login":
-                contentPanel.add(new TelaLogin(this));
-                break;
-            case "partida":
-                contentPanel.add(new TelaPartida());
-                break;
-            case "menu":
-                contentPanel.add(criarTelaMenu());
-                break;
-            case "selecao":
-                contentPanel.add(new TelaSelecao(this));
-                break;
-            case "estadio":
-                contentPanel.add(new EstadioView(this));
-                break;
-            case "arbitro":
-                contentPanel.add(new ArbitroView(this));
-                break;
-            case "jogador" :
-                contentPanel.add(new TelaJogadores(this));
-                break;
-            default:
-                contentPanel.add(criarTelaMenu());
+        // FlatLaf
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            SwingUtilities.updateComponentTreeUI(this);
+        } catch (Exception ex) {
+            System.out.println("Usando LookAndFeel padrão");
         }
-
-        contentPanel.revalidate();
-        contentPanel.repaint();
     }
 
-    private JPanel criarTelaMenu() {
-        return new TelaMenu(this);
+    private void setupScreens() {
+        //telas
+        container.add(new TelaLogin(this), "login");
+        container.add(new TelaCadastro(this), "cadastro");
+        container.add(new TelaMenu(this), "menu");
+        container.add(new TelaJogadores(this), "jogadores");
+        container.add(new TelaPartidas(this), "partidas");
+        container.add(new TelaSelecao(this), "selecoes");
+        container.add(new EstadioView(this), "estadios");
+        container.add(new ArbitroView(this), "arbitros");
+        container.add(new TelaRelatorio(this), "relatorios");
+
+        add(container);
+    }
+
+    public void mostrarTela(String nomeTela) {
+        cardLayout.show(container, nomeTela);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new CopaApp().start();
+            new CopaApp().setVisible(true);
         });
     }
 }
