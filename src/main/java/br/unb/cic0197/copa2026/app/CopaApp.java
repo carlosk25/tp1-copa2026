@@ -38,15 +38,15 @@ public class CopaApp extends JFrame {
 
     private void setupScreens() {
         //telas
-        container.add(new LoginView(this), "login");
-        container.add(new CadastroView(this), "cadastro");
-        container.add(new DashboardView(this), "dashboard");
-        container.add(new JogadoresView(this), "jogadores");
-        container.add(new PartidaView(this), "partidas");
-        container.add(new SelecaoView(this), "selecoes");
+        container.add(new TelaLogin(this), "login");
+        container.add(new TelaCadastro(this), "cadastro");
+        container.add(new TelaMenu(this), "menu");
+        container.add(new TelaJogadores(this), "jogadores");
+        container.add(new TelaPartidas(this), "partidas");
+        container.add(new TelaSelecao(this), "selecoes");
         container.add(new EstadioView(this), "estadios");
         container.add(new ArbitroView(this), "arbitros");
-        container.add(new RelatorioView(this), "relatorios");
+        container.add(new TelaRelatorio(this), "relatorios");
 
         add(container);
     }
