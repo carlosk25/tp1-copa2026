@@ -36,6 +36,10 @@ public class TelaJogadores extends JPanel {
         JTextField txtSelecao = new JTextField();
         painelCadastro.add(txtSelecao);
 
+        painelCadastro.add(new JLabel("Status:"));
+        String[] statusOpcoes = {"Ativo", "Lesionado", "Suspenso"};
+        JComboBox<String> comboStatus = new JComboBox<>(statusOpcoes);
+        painelCadastro.add(comboStatus);
 
         JPanel painelFiltros = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         painelFiltros.setBorder(BorderFactory.createTitledBorder("Filtrar por"));
