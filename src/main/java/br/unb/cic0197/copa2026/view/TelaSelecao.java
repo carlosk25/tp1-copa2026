@@ -14,8 +14,10 @@ public class TelaSelecao extends JPanel {
         add(txtPais);
 
         add(new JLabel("Grupo:"));
-        JTextField txtGrupo = new JTextField();
-        add(txtGrupo);
+        String[] grupos = {"Grupo 1", "Grupo 2", "Grupo 3", "Grupo 4",
+                "Grupo 5", "Grupo 6", "Grupo 7", "Grupo 8"};
+        JComboBox<String> comboGrupo = new JComboBox<>(grupos);
+        add(comboGrupo);
 
         add(new JLabel("Técnico:"));
         JTextField txtTecnico = new JTextField();

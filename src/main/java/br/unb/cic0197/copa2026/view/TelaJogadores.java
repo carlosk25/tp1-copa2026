@@ -5,48 +5,80 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TelaJogadores extends JPanel {
-    public TelaJogadores(CopaApp app){
-        setLayout(new GridLayout(0, 2, 10, 10));
 
-        add(new JLabel("Nome:"));
+    public TelaJogadores(CopaApp app) {
+        setLayout(new BorderLayout(10, 10));
+
+
+        JPanel painelCadastro = new JPanel(new GridLayout(0, 2, 10, 10));
+        painelCadastro.setBorder(BorderFactory.createTitledBorder("Dados do Jogador"));
+
+        painelCadastro.add(new JLabel("Nome:"));
         JTextField txtNome = new JTextField();
-        add(txtNome);
+        painelCadastro.add(txtNome);
 
-        add(new JLabel("Posição:"));
-        JTextField txtPosicao = new JTextField();
-        add(txtPosicao);
+        painelCadastro.add(new JLabel("Posição:"));
+        String[] posicoes = {"Goleiro", "Lateral Direito", "Lateral Esquerdo",
+                "Zagueiro", "Volante", "Meio-Campo",
+                "Atacante", "Centroavante"};
+        JComboBox<String> comboPosicao = new JComboBox<>(posicoes);
+        painelCadastro.add(comboPosicao);
 
-        add(new JLabel("Número:"));
+        painelCadastro.add(new JLabel("Número:"));
         JTextField txtNumero = new JTextField();
-        add(txtNumero);
+        painelCadastro.add(txtNumero);
 
-        add(new JLabel("Idade:"));
+        painelCadastro.add(new JLabel("Idade:"));
         JTextField txtIdade = new JTextField();
-        add(txtIdade);
+        painelCadastro.add(txtIdade);
 
-        add(new JLabel("Seleção:"));
+        painelCadastro.add(new JLabel("Seleção:"));
         JTextField txtSelecao = new JTextField();
-        add(txtSelecao);
+        painelCadastro.add(txtSelecao);
 
-        add(new JLabel("Status:"));
-        String[] statusOpcoes = {"Ativo", "Lesionado", "Suspenso"};
-        JComboBox<String> comboStatus = new JComboBox<>(statusOpcoes);
-        add(comboStatus);
+
+        JPanel painelFiltros = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        painelFiltros.setBorder(BorderFactory.createTitledBorder("Filtrar por"));
+
+        painelFiltros.add(new JLabel("Posição:"));
+        String[] posicoesComTodas = {"Todas", "Goleiro", "Lateral Direito", "Lateral Esquerdo",
+                "Zagueiro", "Volante", "Meio-Campo",
+                "Atacante", "Centroavante"};
+        JComboBox<String> comboFiltroPosicao = new JComboBox<>(posicoesComTodas);
+        painelFiltros.add(comboFiltroPosicao);
+
+        painelFiltros.add(new JLabel("Seleção:"));
+        JTextField txtFiltroSelecao = new JTextField(10);
+        painelFiltros.add(txtFiltroSelecao);
+
+        JButton btnFiltrar = new JButton("Filtrar");
+        painelFiltros.add(btnFiltrar);
+
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
 
         JButton btnAdicionar = new JButton("Adicionar");
-        add(btnAdicionar);
+        painelBotoes.add(btnAdicionar);
 
         JButton btnListar = new JButton("Listar");
-        add(btnListar);
+        painelBotoes.add(btnListar);
 
         JButton btnEditar = new JButton("Editar");
-        add(btnEditar);
+        painelBotoes.add(btnEditar);
 
         JButton btnExcluir = new JButton("Excluir");
-        add(btnExcluir);
+        painelBotoes.add(btnExcluir);
 
         JButton btnVoltar = new JButton("Voltar");
         btnVoltar.addActionListener(e -> app.mostrarTela("menu"));
-        add(btnVoltar);
+        Component add = painelBotoes.add(btnVoltar);
+
+
+        JPanel painelSuperior = new JPanel(new BorderLayout());
+        painelSuperior.add(painelCadastro, BorderLayout.NORTH);
+        painelSuperior.add(painelFiltros, BorderLayout.CENTER);
+        painelSuperior.add(painelBotoes, BorderLayout.SOUTH);
+
+        add(painelSuperior, BorderLayout.NORTH);
     }
 }
