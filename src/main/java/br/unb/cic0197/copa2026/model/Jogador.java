@@ -6,15 +6,19 @@ public class Jogador {
     private String posicao;
     private int numero;
     private int idade;
+    private StatusJogador status;
     private Selecao selecao;
+    public enum StatusJogador {ATIVO, LESIONADO, SUSPENSO }
 
-    public Jogador(String id, String nome, String posicao, int numero, int idade, Selecao selecao) {
+    public Jogador(String id, String nome, String posicao, int numero, int idade, StatusJogador status, Selecao selecao) {
         this.id = id;
         this.nome = nome;
         this.posicao = posicao;
         this.numero = numero;
         this.idade = idade;
+        this.status = status;
         this.selecao = selecao;
+
     }
 
     public String getId() { return id; }
@@ -32,11 +36,14 @@ public class Jogador {
     public int getIdade() { return idade; }
     public void setIdade(int idade) { this.idade = idade; }
 
+    public StatusJogador getStatus() {return status; }
+    public void setStatus(StatusJogador status) {this.status = status;}
+
     public Selecao getSelecao() { return selecao; }
     public void setSelecao(Selecao selecao) { this.selecao = selecao; }
 
     @Override
     public String toString() {
-        return "#" + numero + " " + nome + " - " + posicao;
+        return "#" + numero + " " + nome + " - " + posicao + " - " + status;
     }
 }
