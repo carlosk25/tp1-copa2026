@@ -15,6 +15,11 @@ public class CopaApp extends JFrame {
         setupScreens();
     }
 
+    public void start() {
+        mostrarTela("login");
+        setVisible(true);
+    }
+
     private void initUI() {
         setTitle("Copa 2026 - Sistema de Gerenciamento");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,7 +47,7 @@ public class CopaApp extends JFrame {
         container.add(new TelaCadastro(this), "cadastro");
         container.add(new TelaMenu(this), "menu");
         container.add(new TelaJogadores(this), "jogadores");
-        container.add(new TelaPartidas(this), "partidas");
+        container.add(new TelaPartida(this), "partidas");
         container.add(new TelaSelecao(this), "selecoes");
         container.add(new EstadioView(this), "estadios");
         container.add(new ArbitroView(this), "arbitros");

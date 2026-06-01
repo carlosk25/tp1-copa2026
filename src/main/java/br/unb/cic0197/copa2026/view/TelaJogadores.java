@@ -18,9 +18,8 @@ public class TelaJogadores extends JPanel {
         painelCadastro.add(txtNome);
 
         painelCadastro.add(new JLabel("Posição:"));
-        String[] posicoes = {"Goleiro", "Lateral Direito", "Lateral Esquerdo",
-                "Zagueiro", "Volante", "Meio-Campo",
-                "Atacante", "Centroavante"};
+        String[] posicoes = {"Goleiro", "Lateral Esquerdo", "Lateral Direito", "Zagueiro", "Volante", "Meia-Central", "Meia-Direito",
+                "Meia-Ofensivo", "Ponta Esquerda", "Ponta Direita", "Atacante", "Segundo Atacante"};
         JComboBox<String> comboPosicao = new JComboBox<>(posicoes);
         painelCadastro.add(comboPosicao);
 

@@ -1,0 +1,2 @@
+1;Brasil;G;Dorival
+2;Argentina;C;Scaloni
