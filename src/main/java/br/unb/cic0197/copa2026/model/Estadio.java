@@ -1,6 +1,10 @@
 package br.unb.cic0197.copa2026.model;
 
-public class Estadio {
+import java.io.Serializable;
+
+public class Estadio implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String nome;
     private String localizacao;
     private int capacidade;

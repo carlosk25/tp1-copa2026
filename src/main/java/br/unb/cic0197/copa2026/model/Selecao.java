@@ -1,9 +1,12 @@
 package br.unb.cic0197.copa2026.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Selecao {
+public class Selecao implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String id;
     private String pais;
     private String grupo;

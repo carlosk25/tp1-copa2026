@@ -1,9 +1,11 @@
 package br.unb.cic0197.copa2026.app;
 
+import br.unb.cic0197.copa2026.repository.EstadioRepository;
+import br.unb.cic0197.copa2026.repository.JogadorRepository;
+import br.unb.cic0197.copa2026.repository.SelecaoRepository;
 import br.unb.cic0197.copa2026.view.*;
 import javax.swing.*;
 import java.awt.*;
-import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.image.BufferedImage;
 
 public class CopaApp extends JFrame {
@@ -27,13 +29,17 @@ public class CopaApp extends JFrame {
         cardLayout = new CardLayout();
         container = new JPanel(cardLayout);
 
-        // FlatLaf
         try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SwingUtilities.updateComponentTreeUI(this);
         } catch (Exception ex) {
             System.out.println("Usando LookAndFeel padrão");
         }
+
+        // Inicializa arquivos de dados com registros de exemplo quando estiverem vazios.
+        SelecaoRepository selecaoRepository = new SelecaoRepository();
+        new EstadioRepository();
+        new JogadorRepository(selecaoRepository);
     }
 
     private void setupScreens() {
@@ -42,7 +48,7 @@ public class CopaApp extends JFrame {
         container.add(new TelaCadastro(this), "cadastro");
         container.add(new TelaMenu(this), "menu");
         container.add(new TelaJogadores(this), "jogadores");
-        container.add(new TelaPartidas(this), "partidas");
+        container.add(new TelaPartida(this), "partidas");
         container.add(new TelaSelecao(this), "selecoes");
         container.add(new EstadioView(this), "estadios");
         container.add(new ArbitroView(this), "arbitros");
@@ -53,6 +59,10 @@ public class CopaApp extends JFrame {
 
     public void mostrarTela(String nomeTela) {
         cardLayout.show(container, nomeTela);
+    }
+
+    public void start() {
+        setVisible(true);
     }
 
     public static void main(String[] args) {
