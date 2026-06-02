@@ -1,8 +1,17 @@
-package br.unb.cic0197.copa2026.view;
-
+package br.unb.cic0197.copa2026.view
+    
 import br.unb.cic0197.copa2026.app.CopaApp;
+import br.unb.cic0197.copa2026.controller.UsuarioGerenciador;
+import br.unb.cic0197.copa2026.exception.UsuarioJaCadastradoException;
+import br.unb.cic0197.copa2026.model.Administrador;
+import br.unb.cic0197.copa2026.model.Arbitro;
+import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
+import br.unb.cic0197.copa2026.model.Usuario;
+import br.unb.cic0197.copa2026.services.UsuarioService;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class TelaCadastro extends JPanel {
     private CopaApp app;
@@ -13,7 +22,7 @@ public class TelaCadastro extends JPanel {
     private JPasswordField confirmarSenhaField;
     private JComboBox<String> tipoAcessoCombo;
 
-    public TelaCadastro(CopaApp app) {
+    public TelaCadastro (CopaApp app) {
         this.app = app;
         initComponents();
     }
@@ -22,7 +31,7 @@ public class TelaCadastro extends JPanel {
         setLayout(new BorderLayout());
         setBackground(new Color(240, 248, 255));
 
-    
+        // Painel central com formulário
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(new Color(240, 248, 255));
         formPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
@@ -30,7 +39,7 @@ public class TelaCadastro extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 10, 8, 10);
 
-        // título
+        // Título
         JLabel titleLabel = new JLabel("Copa 2026 - Cadastro de Usuário");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
         titleLabel.setForeground(new Color(0, 100, 0));
@@ -40,7 +49,7 @@ public class TelaCadastro extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         formPanel.add(titleLabel, gbc);
 
-    
+        // Espaço entre título e campos
         gbc.gridy = 1;
         formPanel.add(Box.createVerticalStrut(10), gbc);
 
@@ -99,7 +108,8 @@ public class TelaCadastro extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(emailField, gbc);
 
-        // senha
+        // Senha - Cadastro com a senha gerada pelo admin
+        /*
         gbc.gridy = 5;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.EAST;
@@ -117,7 +127,7 @@ public class TelaCadastro extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(senhaField, gbc);
 
-        // confirmar Senha
+        // Confirmar Senha
         gbc.gridy = 6;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.EAST;
@@ -134,8 +144,8 @@ public class TelaCadastro extends JPanel {
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(confirmarSenhaField, gbc);
-
-        // tipo de acesso
+        */
+        // Tipo de Acesso
         gbc.gridy = 7;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.EAST;
@@ -143,7 +153,7 @@ public class TelaCadastro extends JPanel {
         tipoLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         formPanel.add(tipoLabel, gbc);
 
-        String[] tipos = {"Administrador", "Usuário Comum", "Operador", "Organizador"};
+        String[] tipos = {"Administrador", "Árbitro", "Organizador"};
         tipoAcessoCombo = new JComboBox<>(tipos);
         tipoAcessoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
         tipoAcessoCombo.setBackground(Color.WHITE);
@@ -155,7 +165,7 @@ public class TelaCadastro extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(tipoAcessoCombo, gbc);
 
-
+        // Botões
         gbc.gridy = 8;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
@@ -165,7 +175,7 @@ public class TelaCadastro extends JPanel {
         buttonPanel.setBackground(new Color(240, 248, 255));
 
         JButton voltarBtn = createStyledButton("← Voltar", new Color(100, 100, 100));
-        JButton cadastrarBtn = createStyledButton("Finalizar Cadastro", new Color(0, 150, 0));
+        JButton cadastrarBtn = createStyledButton("Solicitar Cadastro", new Color(0, 150, 0));
 
         voltarBtn.addActionListener(e -> app.mostrarTela("login"));
         cadastrarBtn.addActionListener(e -> finalizarCadastro());
@@ -177,7 +187,6 @@ public class TelaCadastro extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        
         JLabel footerLabel = new JLabel("© 2026 Copa do Mundo - Todos os direitos reservados", JLabel.CENTER);
         footerLabel.setFont(new Font("Arial", Font.PLAIN, 10));
         footerLabel.setForeground(Color.GRAY);
@@ -195,47 +204,24 @@ public class TelaCadastro extends JPanel {
         return button;
     }
 
+
     private void finalizarCadastro() {
-        String nome = nomeField.getText();
-        String data = dataNascimentoField.getText();
-        String email = emailField.getText();
-        String senha = new String(senhaField.getPassword());
-        String confirmar = new String(confirmarSenhaField.getPassword());
-        String tipoAcesso = (String) tipoAcessoCombo.getSelectedItem();
+      
+        String nome = nomeField.getText();                  
+        String email = emailField.getText();                
+        String dataNasc = dataNascimentoField.getText();
+        String perfil = tipoAcessoCombo.getSelectedItem().toString();
 
-        if (nome.isEmpty() || data.isEmpty() || email.isEmpty() || senha.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Por favor, preencha todos os campos!",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
+        SolicitacaoCadastro novaSolicitacao = new SolicitacaoCadastro(nome, email, dataNasc, perfil);
+        UsuarioService usuarioService = new UsuarioService();
+
+        try {
+            usuarioService.cadastrarSolicitacao(novaSolicitacao);
+            JOptionPane.showMessageDialog(this, "Solicitação de cadastro enviada aos administradores com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            app.mostrarTela("login");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro no Cadastro", JOptionPane.ERROR_MESSAGE);
         }
-
-        if (!senha.equals(confirmar)) {
-            JOptionPane.showMessageDialog(this,
-                    "As senhas não conferem!",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (senha.length() < 3) {
-            JOptionPane.showMessageDialog(this,
-                    "A senha deve ter no mínimo 3 caracteres!",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        JOptionPane.showMessageDialog(this,
-                "Cadastro realizado com sucesso!\nBem-vindo(a) " + nome + "\nTipo: " + tipoAcesso,
-                "Sucesso",
-                JOptionPane.INFORMATION_MESSAGE);
-
-        // Volta para o login
-        app.mostrarTela("login");
-
-        limparCampos();
     }
 
     private void limparCampos() {
