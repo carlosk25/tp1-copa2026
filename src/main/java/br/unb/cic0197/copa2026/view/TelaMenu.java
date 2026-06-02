@@ -78,11 +78,11 @@ import br.unb.cic0197.copa2026.model.ArbitroUser;
 import javax.swing.*;
 import java.awt.*;
 
-public class DashboardView extends JPanel {
+public class TelaMenu extends JPanel {
     private CopaApp app;
     private JPanel menuPanel; 
 
-    public DashboardView(CopaApp app) {
+    public TelaMenu(CopaApp app) {
         this.app = app;
         initComponents();
     }
