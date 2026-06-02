@@ -4,47 +4,66 @@ import br.unb.cic0197.copa2026.app.CopaApp;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
-
+import br.unb.cic0197.copa2026.controller.RelatorioController;
 
 public class TelaRelatorio extends JPanel {
     private CopaApp app;
+    private DefaultTableModel modeloUsuarios;
+    private DefaultTableModel modeloSolicitacoes;
+    private JTable tabelaUsuarios;
+    private JTable tabelaSolicitacoes;
+    private JPanel painelAdminAprovacao;
+    private RelatorioController controller; 
 
     public TelaRelatorio(CopaApp app) {
         this.app = app;
+        this.controller = new RelatorioController(this);
+
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel lblTitulo = new JLabel("RELATÓRIOS CONSOLIDADOS DA COMPETIÇÃO", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel("PAINEL OPERACIONAL E RELATÓRIOS CONSOLIDADOS", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
         add(lblTitulo, BorderLayout.NORTH);
 
-        String[] colunas = {"Métrica", "Valor Consolidado", "Detalhes"};
-        DefaultTableModel modelo = new DefaultTableModel(colunas, 0);
+        String[] colunasUsers = {"Nome / Métrica", "Perfil", "Detalhes Funcionais (Polimorfismo)"};
+        modeloUsuarios = new DefaultTableModel(colunasUsers, 0);
+        tabelaUsuarios = new JTable(modeloUsuarios);
 
-        modelo.addRow(new Object[]{"Número de Partidas", "64", "Total do torneio"});
-        modelo.addRow(new Object[]{"Público Total", "3.450.000", "Média de 53k por jogo"});
-        modelo.addRow(new Object[]{"Desempenho de Seleções", "Brasil", "Melhor ataque"});
+        JPanel painelCentro = new JPanel(new GridLayout(2, 1, 10, 10));
+        painelCentro.add(new JScrollPane(tabelaUsuarios));
+        add(painelCentro, BorderLayout.CENTER);
+   
+        painelAdminAprovacao = new JPanel(new BorderLayout(5, 5));
+        painelAdminAprovacao.setBorder(BorderFactory.createTitledBorder("Solicitações Pendentes de Cadastro (Apenas Administradores)"));
 
-        JTable tabela = new JTable(modelo);
-        add(new JScrollPane(tabela), BorderLayout.CENTER);
+        String[] colunasSol = {"Nome Solicitante", "E-mail informado", "Perfil Desejado"};
+        modeloSolicitacoes = new DefaultTableModel(colunasSol, 0);
+        tabelaSolicitacoes = new JTable(modeloSolicitacoes);
+        painelAdminAprovacao.add(new JScrollPane(tabelaSolicitacoes), BorderLayout.CENTER);
 
-        // Painel de pesquisa 
-        JPanel painelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        painelPesquisa.add(new JLabel("Pesquisar por:"));
-        JComboBox<String> comboCriterios = new JComboBox<>(new String[]{"Nome", "Função", "País", "Status"});
-        JTextField txtPesquisa = new JTextField(15);
-        JButton btnBuscar = new JButton("Pesquisar");
+        JButton btnAprovar = new JButton("✔ Aprovar Selecionado e Gerar Senha");
+        painelAdminAprovacao.add(btnAprovar, BorderLayout.SOUTH);
 
-        painelPesquisa.add(comboCriterios);
-        painelPesquisa.add(txtPesquisa);
-        painelPesquisa.add(btnBuscar);
+        btnAprovar.addActionListener(e -> controller.executarAprovacao());
 
-      
-        add(painelPesquisa, BorderLayout.BEFORE_FIRST_LINE);
+        painelCentro.add(painelAdminAprovacao);
 
-      
+        // Botão Voltar
         JButton btnVoltar = new JButton("Voltar ao Menu");
         btnVoltar.addActionListener(e -> app.mostrarTela("dashboard"));
         add(btnVoltar, BorderLayout.SOUTH);
+
+        atualizarDados();
     }
+
+ 
+    public void atualizarDados() {
+        controller.configurarPermissoesExibicao();
+    }
+
+    public DefaultTableModel getModeloUsuarios() { return modeloUsuarios; }
+    public DefaultTableModel getModeloSolicitacoes() { return modeloSolicitacoes; }
+    public JTable getTabelaSolicitacoes() { return tabelaSolicitacoes; }
+    public JPanel getPainelAdminAprovacao() { return painelAdminAprovacao; }
 }
