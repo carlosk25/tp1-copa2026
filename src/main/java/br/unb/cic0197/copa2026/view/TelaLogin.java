@@ -1,6 +1,11 @@
 package br.unb.cic0197.copa2026.view;
 
 import br.unb.cic0197.copa2026.app.CopaApp;
+import br.unb.cic0197.copa2026.controller.UsuarioGerenciador;
+import br.unb.cic0197.copa2026.controller.SessaoSistema;
+import br.unb.cic0197.copa2026.exception.UsuarioInvalidoException;
+import br.unb.cic0197.copa2026.model.Usuario;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,7 +13,7 @@ public class TelaLogin extends JPanel {
     private CopaApp app;
     private JTextField usuarioField;
     private JPasswordField senhaField;
-    private JLabel imageLabel; // imagem
+    private JLabel imageLabel;
 
     public TelaLogin(CopaApp app) {
         this.app = app;
@@ -17,8 +22,7 @@ public class TelaLogin extends JPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE); 
-
+        setBackground(Color.WHITE);
 
         JPanel leftPanel = new JPanel(new GridBagLayout());
         leftPanel.setBackground(Color.WHITE);
@@ -28,7 +32,7 @@ public class TelaLogin extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // titulo
+        // Título
         JLabel titleLabel = new JLabel("Copa 2026 - Acesso");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         titleLabel.setForeground(new Color(0, 100, 0));
@@ -37,17 +41,17 @@ public class TelaLogin extends JPanel {
         gbc.gridwidth = 2;
         leftPanel.add(titleLabel, gbc);
 
-        // user
+        // Usuário (E-mail)
         gbc.gridwidth = 1;
         gbc.gridy = 1;
         gbc.gridx = 0;
-        leftPanel.add(new JLabel("Usuário:"), gbc);
+        leftPanel.add(new JLabel("E-mail (Usuário):"), gbc);
 
         usuarioField = new JTextField(15);
         gbc.gridx = 1;
         leftPanel.add(usuarioField, gbc);
 
-        // senha
+        // Senha
         gbc.gridy = 2;
         gbc.gridx = 0;
         leftPanel.add(new JLabel("Senha:"), gbc);
@@ -74,15 +78,13 @@ public class TelaLogin extends JPanel {
         gbc.gridwidth = 2;
         leftPanel.add(buttonPanel, gbc);
 
-        // imagem da taça
+        
         imageLabel = new JLabel("", JLabel.CENTER);
 
         try {
-
             java.net.URL imgURL = getClass().getResource("/imagens/copa-do-mundo-2026-logo2.jpg");
             if (imgURL != null) {
                 ImageIcon iconOriginal = new ImageIcon(imgURL);
-        
                 Image imgEscalada = iconOriginal.getImage().getScaledInstance(400, 500, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(imgEscalada));
             }
@@ -90,10 +92,10 @@ public class TelaLogin extends JPanel {
             System.err.println("Erro ao carregar imagem: " + e.getMessage());
         }
 
-        add(leftPanel, BorderLayout.WEST);  
-        add(imageLabel, BorderLayout.CENTER); 
+        add(leftPanel, BorderLayout.WEST);
+        add(imageLabel, BorderLayout.CENTER);
 
-    
+        
         JLabel footerLabel = new JLabel("© 2026 Copa do Mundo - Todos os direitos reservados", JLabel.CENTER);
         footerLabel.setFont(new Font("Arial", Font.PLAIN, 10));
         footerLabel.setForeground(Color.GRAY);
@@ -108,20 +110,49 @@ public class TelaLogin extends JPanel {
         button.setFont(new Font("Arial", Font.BOLD, 13));
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         return button;
     }
 
     private void fazerLogin() {
-        String usuario = usuarioField.getText();
-        String senha = new String(senhaField.getPassword());
+        String emailInput = usuarioField.getText();
+        String senhaInput = new String(senhaField.getPassword());
 
-        if (usuario.equals("admin") && senha.equals("123")) {
-            JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
-            app.mostrarTela("menu");
-        } else {
-            JOptionPane.showMessageDialog(this, "Usuário ou senha inválidos!", "Erro", JOptionPane.ERROR_MESSAGE);
+        if (emailInput.isEmpty() || senhaInput.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            Usuario usuarioLogado = UsuarioGerenciador.autenticar(emailInput, senhaInput);
+
+            // alteração de senha
+            if (usuarioLogado.isPrimeiroAcesso()) {
+                String novaSenha = JOptionPane.showInputDialog(this,
+                        "Este é o seu primeiro acesso com a senha gerada pelo Administrador.\nDigite sua nova senha definitiva:",
+                        "Alteração de Senha Obrigatória", JOptionPane.QUESTION_MESSAGE);
+
+                if (novaSenha == null || novaSenha.trim().length() < 3) {
+                    JOptionPane.showMessageDialog(this, "Senha inválida! Login cancelado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Atualiza a senha
+                UsuarioGerenciador.atualizarSenhaPrimeiroAcesso(usuarioLogado.getEmail(), novaSenha);
+                JOptionPane.showMessageDialog(this, "Senha atualizada com sucesso! Faça login novamente com suas novas credenciais.");
+                usuarioField.setText("");
+                senhaField.setText("");
+                return;
+            }
+
+            SessaoSistema.iniciarSessao(usuarioLogado);
+            JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuarioLogado.getNome());
+            app.mostrarTela("dashboard");
+
+        } catch (UsuarioInvalidoException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro de Acesso", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage(), "Erro Interno", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
