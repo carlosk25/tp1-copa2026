@@ -3,6 +3,7 @@ package br.unb.cic0197.copa2026.view;
 import br.unb.cic0197.copa2026.app.CopaApp;
 import br.unb.cic0197.copa2026.enums.FaseCompeticao;
 import br.unb.cic0197.copa2026.enums.StatusPartida;
+import br.unb.cic0197.copa2026.exception.Copa2026Exception;
 import br.unb.cic0197.copa2026.model.Arbitro;
 import br.unb.cic0197.copa2026.model.Estadio;
 import br.unb.cic0197.copa2026.model.Partida;
@@ -11,7 +12,7 @@ import br.unb.cic0197.copa2026.model.Selecao;
 import br.unb.cic0197.copa2026.repository.ArbitroRepository;
 import br.unb.cic0197.copa2026.repository.EstadioRepository;
 import br.unb.cic0197.copa2026.repository.SelecaoRepository;
-import br.unb.cic0197.copa2026.service.PartidaService;
+import br.unb.cic0197.copa2026.controller.PartidaController;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class TelaPartida extends JPanel {
     private final CopaApp app;
-    private final PartidaService partidaService;
+    private final PartidaController partidaController;
     private final SelecaoRepository selecaoRepository;
     private final EstadioRepository estadioRepository;
     private final ArbitroRepository arbitroRepository;
@@ -51,12 +52,12 @@ public class TelaPartida extends JPanel {
 
     public TelaPartida(CopaApp app) {
         this.app = app;
-        this.partidaService = new PartidaService();
+        this.partidaController = new PartidaController();
         this.selecaoRepository = new SelecaoRepository();
         this.estadioRepository = new EstadioRepository();
         this.arbitroRepository = new ArbitroRepository();
         initComponents();
-        atualizarTabela(partidaService.obterTodas());
+        atualizarTabela(partidaController.listarPartidas());
     }
 
     private void initComponents() {
@@ -292,7 +293,7 @@ public class TelaPartida extends JPanel {
             comboBuscaFase.setSelectedIndex(0);
             comboBuscaArbitro.setSelectedIndex(0);
             txtBuscaData.setText("");
-            atualizarTabela(partidaService.obterTodas());
+            atualizarTabela(partidaController.listarPartidas());
         });
 
         gbc.gridx = 0;
@@ -373,28 +374,32 @@ public class TelaPartida extends JPanel {
             }
         }
 
-        if (partidaSelecionada == null) {
-            Partida partida = new Partida(data, horario, estadio, selecaoA, selecaoB, fase, status);
-            partida.setResultado(resultado);
-            partida.setArbitro(arbitro);
-            partidaService.salvar(partida);
-            JOptionPane.showMessageDialog(this, "Partida cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            partidaSelecionada.setData(data);
-            partidaSelecionada.setHorario(horario);
-            partidaSelecionada.setEstadio(estadio);
-            partidaSelecionada.setSelecaoA(selecaoA);
-            partidaSelecionada.setSelecaoB(selecaoB);
-            partidaSelecionada.setArbitro(arbitro);
-            partidaSelecionada.setFase(fase);
-            partidaSelecionada.setStatus(status);
-            partidaSelecionada.setResultado(resultado);
-            partidaService.atualizar(partidaSelecionada);
-            JOptionPane.showMessageDialog(this, "Partida atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        }
+        try {
+            if (partidaSelecionada == null) {
+                Partida partida = new Partida(data, horario, estadio, selecaoA, selecaoB, fase, status);
+                partida.setResultado(resultado);
+                partida.setArbitro(arbitro);
+                partidaController.salvarPartida(partida);
+                JOptionPane.showMessageDialog(this, "Partida cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                partidaSelecionada.setData(data);
+                partidaSelecionada.setHorario(horario);
+                partidaSelecionada.setEstadio(estadio);
+                partidaSelecionada.setSelecaoA(selecaoA);
+                partidaSelecionada.setSelecaoB(selecaoB);
+                partidaSelecionada.setArbitro(arbitro);
+                partidaSelecionada.setFase(fase);
+                partidaSelecionada.setStatus(status);
+                partidaSelecionada.setResultado(resultado);
+                partidaController.atualizarPartida(partidaSelecionada);
+                JOptionPane.showMessageDialog(this, "Partida atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            }
 
-        atualizarTabela(partidaService.obterTodas());
-        limparCampos();
+            atualizarTabela(partidaController.listarPartidas());
+            limparCampos();
+        } catch (Copa2026Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void excluirPartida() {
@@ -405,10 +410,14 @@ public class TelaPartida extends JPanel {
 
         int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir a partida selecionada?", "Confirmar exclusão", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            partidaService.remover(partidaSelecionada);
-            atualizarTabela(partidaService.obterTodas());
-            limparCampos();
-            JOptionPane.showMessageDialog(this, "Partida excluída.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                partidaController.removerPartida(partidaSelecionada);
+                atualizarTabela(partidaController.listarPartidas());
+                limparCampos();
+                JOptionPane.showMessageDialog(this, "Partida excluída.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Copa2026Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro de exclusão", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -417,7 +426,7 @@ public class TelaPartida extends JPanel {
         FaseCompeticao fase = comboBuscaFase.getSelectedIndex() <= 0 ? null : (FaseCompeticao) comboBuscaFase.getSelectedItem();
         String arbitro = (String) comboBuscaArbitro.getSelectedItem();
         String data = txtBuscaData.getText().trim();
-        List<Partida> resultado = partidaService.buscar(selecao, fase, data, arbitro);
+        List<Partida> resultado = partidaController.buscarPartidas(selecao, fase, data, arbitro);
         atualizarTabela(resultado);
     }
 
@@ -432,7 +441,7 @@ public class TelaPartida extends JPanel {
         }
 
         String id = (String) tableModel.getValueAt(selectedRow, 0);
-        partidaService.obterPorId(id).ifPresent(this::carregarPartidaNoFormulario);
+        partidaController.obterPartidaPorId(id).ifPresent(this::carregarPartidaNoFormulario);
     }
 
     private void carregarPartidaNoFormulario(Partida partida) {
