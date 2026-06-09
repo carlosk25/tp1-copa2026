@@ -7,10 +7,10 @@ import javax.swing.*;
 import java.util.List;
 
 public class RelatorioController {
-    private final RelatorioView view;
+    private final TelaRelatorio view;
     private final UsuarioService usuarioService;
 
-    public RelatorioController(RelatorioView view) {
+    public RelatorioController(TelaRelatorio view) {
         this.view = view;
         this.usuarioService = new UsuarioService();
     }
