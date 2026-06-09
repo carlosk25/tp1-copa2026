@@ -174,7 +174,7 @@ public class TelaMenu extends JPanel {
         button.setForeground(Color.WHITE);
         button.setFont(new Font("Arial", Font.BOLD, 12)); 
         button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); /
+        button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); 
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addActionListener(e -> app.mostrarTela(tela));
         return button;
