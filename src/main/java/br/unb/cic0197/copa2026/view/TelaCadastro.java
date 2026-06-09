@@ -1,4 +1,4 @@
-package br.unb.cic0197.copa2026.view
+package br.unb.cic0197.copa2026.view;
     
 import br.unb.cic0197.copa2026.app.CopaApp;
 import br.unb.cic0197.copa2026.controller.UsuarioGerenciador;
