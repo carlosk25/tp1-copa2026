@@ -61,153 +61,322 @@ public class TelaPartida extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setLayout(new BorderLayout(15, 15));
+        setBackground(new Color(245, 247, 250));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        add(buildFormPanel(), BorderLayout.NORTH);
-        add(buildTablePanel(), BorderLayout.CENTER);
-        add(buildSearchPanel(), BorderLayout.SOUTH);
+        add(buildHeader(), BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        centerPanel.setOpaque(false);
+
+        centerPanel.add(buildFormPanel(), BorderLayout.NORTH);
+        centerPanel.add(buildSearchPanel(), BorderLayout.CENTER);
+        centerPanel.add(buildTablePanel(), BorderLayout.SOUTH);
+
+        add(centerPanel, BorderLayout.CENTER);
+    }
+
+    private JPanel buildHeader() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        panel.setBackground(new Color(25, 118, 210));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
+
+        JLabel titulo = new JLabel("Gerenciamento de Partidas");
+        titulo.setForeground(Color.WHITE);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+
+        JLabel subtitulo = new JLabel("Cadastro, edição e consulta de partidas");
+        subtitulo.setForeground(Color.WHITE);
+        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+        JPanel textPanel = new JPanel();
+        textPanel.setOpaque(false);
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+
+        textPanel.add(titulo);
+        textPanel.add(subtitulo);
+
+        panel.add(textPanel, BorderLayout.WEST);
+
+        return panel;
     }
 
     private JPanel buildFormPanel() {
+
+        JPanel container = new JPanel(new BorderLayout(10, 10));
+
+        container.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(220, 220, 220)),
+                        "Cadastro / Edição de Partida"));
+
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBorder(BorderFactory.createTitledBorder("Gerenciar Partidas"));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(6, 6, 6, 6);
+        gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, 13);
 
         txtData = new JTextField();
         txtHorario = new JTextField();
+
+        txtData.setFont(fieldFont);
+        txtHorario.setFont(fieldFont);
+
         List<String> estadioNomes = new ArrayList<>();
         try {
-            estadioNomes = estadioRepository.carregar().stream()
+            estadioNomes = estadioRepository.carregar()
+                    .stream()
                     .map(Estadio::getNome)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException("Erro ao carregar estádios", e);
         }
+
         if (estadioNomes.isEmpty()) {
             estadioNomes = List.of("Sem estádios");
         }
-        comboEstadio = new JComboBox<>(estadioNomes.toArray(String[]::new));
+
+        comboEstadio = new JComboBox<>(
+                estadioNomes.toArray(String[]::new));
 
         List<String> selecaoNomes = new ArrayList<>();
+
         try {
-            selecaoNomes = selecaoRepository.carregar().stream()
+            selecaoNomes = selecaoRepository.carregar()
+                    .stream()
                     .map(Selecao::getPais)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException("Erro ao carregar seleções", e);
         }
+
         if (selecaoNomes.isEmpty()) {
             selecaoNomes = List.of("Sem seleções");
         }
-        comboSelecaoA = new JComboBox<>(selecaoNomes.toArray(String[]::new));
-        comboSelecaoB = new JComboBox<>(selecaoNomes.toArray(String[]::new));
+
+        comboSelecaoA = new JComboBox<>(
+                selecaoNomes.toArray(String[]::new));
+
+        comboSelecaoB = new JComboBox<>(
+                selecaoNomes.toArray(String[]::new));
 
         List<String> arbitroNomes = new ArrayList<>();
+
         try {
-            arbitroNomes = arbitroRepository.carregar().stream()
+            arbitroNomes = arbitroRepository.carregar()
+                    .stream()
                     .map(Arbitro::getNome)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException("Erro ao carregar árbitros", e);
         }
+
         if (arbitroNomes.isEmpty()) {
             arbitroNomes = List.of("Sem árbitros");
         } else {
             arbitroNomes.add(0, "Nenhum");
         }
-        comboArbitro = new JComboBox<>(arbitroNomes.toArray(String[]::new));
+
+        comboArbitro = new JComboBox<>(
+                arbitroNomes.toArray(String[]::new));
 
         comboFase = new JComboBox<>(FaseCompeticao.values());
         comboStatus = new JComboBox<>(StatusPartida.values());
-        txtPlacarA = new JTextField();
-        txtPlacarB = new JTextField();
-        txtEventos = new JTextArea(3, 18);
+
+        txtPlacarA = new JTextField(3);
+        txtPlacarB = new JTextField(3);
+
+        txtEventos = new JTextArea(5, 30);
         txtEventos.setLineWrap(true);
         txtEventos.setWrapStyleWord(true);
+        txtEventos.setFont(fieldFont);
+
+        // =====================================================
+        // DATA E HORÁRIO
+        // =====================================================
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        formPanel.add(new JLabel("Data (dd/MM/yyyy):"), gbc);
+        formPanel.add(new JLabel("Data"), gbc);
+
         gbc.gridx = 1;
         formPanel.add(txtData, gbc);
 
         gbc.gridx = 2;
-        formPanel.add(new JLabel("Horário (hh:mm):"), gbc);
+        formPanel.add(new JLabel("Horário"), gbc);
+
         gbc.gridx = 3;
         formPanel.add(txtHorario, gbc);
 
+        // =====================================================
+        // ESTÁDIO
+        // =====================================================
+
         gbc.gridx = 0;
         gbc.gridy = 1;
-        formPanel.add(new JLabel("Estádio:"), gbc);
+        formPanel.add(new JLabel("Estádio"), gbc);
+
         gbc.gridx = 1;
         gbc.gridwidth = 3;
         formPanel.add(comboEstadio, gbc);
         gbc.gridwidth = 1;
 
+        // =====================================================
+        // EQUIPES
+        // =====================================================
+
         gbc.gridx = 0;
         gbc.gridy = 2;
-        formPanel.add(new JLabel("Seleção A:"), gbc);
+        formPanel.add(new JLabel("Seleção A"), gbc);
+
         gbc.gridx = 1;
         formPanel.add(comboSelecaoA, gbc);
 
         gbc.gridx = 2;
-        formPanel.add(new JLabel("Seleção B:"), gbc);
+        formPanel.add(new JLabel("Seleção B"), gbc);
+
         gbc.gridx = 3;
         formPanel.add(comboSelecaoB, gbc);
 
+        // =====================================================
+        // ÁRBITRO
+        // =====================================================
+
         gbc.gridx = 0;
         gbc.gridy = 3;
-        formPanel.add(new JLabel("Árbitro:"), gbc);
+        formPanel.add(new JLabel("Árbitro"), gbc);
+
         gbc.gridx = 1;
         gbc.gridwidth = 3;
         formPanel.add(comboArbitro, gbc);
         gbc.gridwidth = 1;
 
+        // =====================================================
+        // FASE E STATUS
+        // =====================================================
+
         gbc.gridx = 0;
         gbc.gridy = 4;
-        formPanel.add(new JLabel("Fase:"), gbc);
+        formPanel.add(new JLabel("Fase"), gbc);
+
         gbc.gridx = 1;
         formPanel.add(comboFase, gbc);
 
         gbc.gridx = 2;
-        formPanel.add(new JLabel("Status:"), gbc);
+        formPanel.add(new JLabel("Status"), gbc);
+
         gbc.gridx = 3;
         formPanel.add(comboStatus, gbc);
 
+        // =====================================================
+        // PLACAR
+        // =====================================================
+
         gbc.gridx = 0;
         gbc.gridy = 5;
-        formPanel.add(new JLabel("Placar A:"), gbc);
-        gbc.gridx = 1;
-        formPanel.add(txtPlacarA, gbc);
+        formPanel.add(new JLabel("Resultado"), gbc);
 
-        gbc.gridx = 2;
-        formPanel.add(new JLabel("Placar B:"), gbc);
-        gbc.gridx = 3;
-        formPanel.add(txtPlacarB, gbc);
+        JPanel placarPanel = new JPanel(
+                new FlowLayout(FlowLayout.LEFT, 10, 0));
+
+        JLabel xLabel = new JLabel("X");
+        xLabel.setFont(
+                new Font("Segoe UI", Font.BOLD, 18));
+
+        txtPlacarA.setHorizontalAlignment(
+                JTextField.CENTER);
+
+        txtPlacarB.setHorizontalAlignment(
+                JTextField.CENTER);
+
+        placarPanel.add(txtPlacarA);
+        placarPanel.add(xLabel);
+        placarPanel.add(txtPlacarB);
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
+        formPanel.add(placarPanel, gbc);
+        gbc.gridwidth = 1;
+
+        // =====================================================
+        // EVENTOS
+        // =====================================================
 
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.anchor = GridBagConstraints.NORTH;
-        formPanel.add(new JLabel("Eventos:"), gbc);
+
+        formPanel.add(new JLabel("Eventos"), gbc);
+
         gbc.gridx = 1;
         gbc.gridwidth = 3;
-        formPanel.add(new JScrollPane(txtEventos), gbc);
+
+        formPanel.add(
+                new JScrollPane(txtEventos),
+                gbc);
+
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        // =====================================================
+        // BOTÕES
+        // =====================================================
+
+        JPanel buttonPanel = new JPanel(
+                new FlowLayout(
+                        FlowLayout.RIGHT,
+                        10,
+                        0));
+
         JButton btnSalvar = new JButton("Salvar");
         JButton btnExcluir = new JButton("Excluir");
         JButton btnNovo = new JButton("Novo");
         JButton btnVoltar = new JButton("Voltar");
 
-        btnSalvar.addActionListener(e -> salvarPartida());
-        btnExcluir.addActionListener(e -> excluirPartida());
-        btnNovo.addActionListener(e -> limparCampos());
-        btnVoltar.addActionListener(e -> app.mostrarTela("menu"));
+        btnSalvar.setBackground(
+                new Color(46, 204, 113));
+
+        btnExcluir.setBackground(
+                new Color(231, 76, 60));
+
+        btnNovo.setBackground(
+                new Color(149, 165, 166));
+
+        btnVoltar.setBackground(
+                new Color(52, 152, 219));
+
+        for (JButton b : new JButton[] {
+                btnSalvar,
+                btnExcluir,
+                btnNovo,
+                btnVoltar }) {
+
+            b.setForeground(Color.WHITE);
+            b.setFocusPainted(false);
+            b.setFont(
+                    new Font(
+                            "Segoe UI",
+                            Font.BOLD,
+                            13));
+        }
+
+        btnSalvar.addActionListener(
+                e -> salvarPartida());
+
+        btnExcluir.addActionListener(
+                e -> excluirPartida());
+
+        btnNovo.addActionListener(
+                e -> limparCampos());
+
+        btnVoltar.addActionListener(
+                e -> app.mostrarTela("menu"));
 
         buttonPanel.add(btnNovo);
         buttonPanel.add(btnSalvar);
@@ -217,19 +386,39 @@ public class TelaPartida extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 7;
         gbc.gridwidth = 4;
+
         formPanel.add(buttonPanel, gbc);
 
-        return formPanel;
+        container.add(formPanel, BorderLayout.CENTER);
+
+        return container;
     }
 
     private JPanel buildTablePanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Partidas Cadastradas"));
 
-        tableModel = new DefaultTableModel(new Object[]{
-                "ID", "Data", "Horário", "Estádio", "Seleção A", "Seleção B",
-                "Árbitro", "Fase", "Status", "Placar", "Eventos"
-        }, 0);
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBackground(new Color(245, 247, 250));
+
+        panel.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(220, 220, 220)),
+                        "Partidas Cadastradas"));
+
+        tableModel = new DefaultTableModel(
+                new Object[] {
+                        "ID",
+                        "Data",
+                        "Horário",
+                        "Estádio",
+                        "Seleção A",
+                        "Seleção B",
+                        "Árbitro",
+                        "Fase",
+                        "Status",
+                        "Placar",
+                        "Eventos"
+                }, 0);
 
         table = new JTable(tableModel) {
             @Override
@@ -239,19 +428,51 @@ public class TelaPartida extends JPanel {
         };
 
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getSelectionModel().addListSelectionListener(this::selecionarPartidaNaTabela);
+        table.getSelectionModel()
+                .addListSelectionListener(this::selecionarPartidaNaTabela);
 
+        // Aparência da tabela
+        table.setRowHeight(34);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+        table.setSelectionBackground(
+                new Color(25, 118, 210));
+
+        table.setSelectionForeground(Color.WHITE);
+
+        table.setGridColor(
+                new Color(230, 230, 230));
+
+        table.setShowVerticalLines(false);
+
+        table.setIntercellSpacing(new Dimension(0, 1));
+
+        // Cabeçalho
+        table.getTableHeader().setFont(
+                new Font("Segoe UI", Font.BOLD, 13));
+
+        table.getTableHeader().setPreferredSize(
+                new Dimension(0, 36));
+
+        table.getTableHeader().setReorderingAllowed(false);
+
+        // Oculta ID
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
         table.getColumnModel().getColumn(0).setPreferredWidth(0);
 
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(
+                BorderFactory.createEmptyBorder());
+
+        panel.add(scrollPane, BorderLayout.CENTER);
+
         return panel;
     }
 
     private JPanel buildSearchPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Consultar Partidas"));
+        panel.setBorder(BorderFactory.createTitledBorder("Partidas Cadastradas"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -349,7 +570,8 @@ public class TelaPartida extends JPanel {
         }
 
         if (selecaoA.equals(selecaoB)) {
-            JOptionPane.showMessageDialog(this, "Seleção A e Seleção B não podem ser iguais.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Seleção A e Seleção B não podem ser iguais.", "Erro",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -360,13 +582,15 @@ public class TelaPartida extends JPanel {
                 int golsBInt = golsB.isEmpty() ? 0 : Integer.parseInt(golsB);
                 resultado = new ResultadoPartida(golsAInt, golsBInt, eventos);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Informe placar numérico válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Informe placar numérico válido.", "Erro",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
         Arbitro arbitro = null;
-        if (arbitroNome != null && !arbitroNome.isBlank() && !arbitroNome.equals("Nenhum") && !arbitroNome.equals("Sem árbitros")) {
+        if (arbitroNome != null && !arbitroNome.isBlank() && !arbitroNome.equals("Nenhum")
+                && !arbitroNome.equals("Sem árbitros")) {
             try {
                 arbitro = arbitroRepository.buscarPorNome(arbitroNome);
             } catch (IOException e) {
@@ -380,7 +604,8 @@ public class TelaPartida extends JPanel {
                 partida.setResultado(resultado);
                 partida.setArbitro(arbitro);
                 partidaController.salvarPartida(partida);
-                JOptionPane.showMessageDialog(this, "Partida cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Partida cadastrada com sucesso!", "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
             } else {
                 partidaSelecionada.setData(data);
                 partidaSelecionada.setHorario(horario);
@@ -392,7 +617,8 @@ public class TelaPartida extends JPanel {
                 partidaSelecionada.setStatus(status);
                 partidaSelecionada.setResultado(resultado);
                 partidaController.atualizarPartida(partidaSelecionada);
-                JOptionPane.showMessageDialog(this, "Partida atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Partida atualizada com sucesso!", "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
 
             atualizarTabela(partidaController.listarPartidas());
@@ -404,11 +630,13 @@ public class TelaPartida extends JPanel {
 
     private void excluirPartida() {
         if (partidaSelecionada == null) {
-            JOptionPane.showMessageDialog(this, "Selecione uma partida na tabela para excluir.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Selecione uma partida na tabela para excluir.", "Erro",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir a partida selecionada?", "Confirmar exclusão", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir a partida selecionada?",
+                "Confirmar exclusão", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
                 partidaController.removerPartida(partidaSelecionada);
@@ -423,7 +651,8 @@ public class TelaPartida extends JPanel {
 
     private void buscarPartidas() {
         String selecao = (String) comboBuscaSelecao.getSelectedItem();
-        FaseCompeticao fase = comboBuscaFase.getSelectedIndex() <= 0 ? null : (FaseCompeticao) comboBuscaFase.getSelectedItem();
+        FaseCompeticao fase = comboBuscaFase.getSelectedIndex() <= 0 ? null
+                : (FaseCompeticao) comboBuscaFase.getSelectedItem();
         String arbitro = (String) comboBuscaArbitro.getSelectedItem();
         String data = txtBuscaData.getText().trim();
         List<Partida> resultado = partidaController.buscarPartidas(selecao, fase, data, arbitro);
@@ -470,7 +699,7 @@ public class TelaPartida extends JPanel {
         tableModel.setRowCount(0);
         for (Partida partida : partidas) {
             String eventos = partida.getResultado() == null ? "" : partida.getResultado().getEventos();
-            tableModel.addRow(new Object[]{
+            tableModel.addRow(new Object[] {
                     partida.getId(),
                     partida.getData(),
                     partida.getHorario(),

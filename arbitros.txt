@@ -1,0 +1,15 @@
+Szymon Marciniak;Polônia;15 anos
+Daniele Orsato;Itália;18 anos
+Michael Oliver;Inglaterra;16 anos
+Clément Turpin;França;17 anos
+Anthony Taylor;Inglaterra;15 anos
+Wilton Pereira Sampaio;Brasil;14 anos
+Raphael Claus;Brasil;12 anos
+Facundo Tello;Argentina;11 anos
+Fernando Rapallini;Argentina;13 anos
+César Ramos;México;12 anos
+Ismail Elfath;Estados Unidos;14 anos
+Victor Gomes;África do Sul;11 anos
+Alireza Faghani;Austrália;16 anos
+Abdulrahman Al-Jassim;Catar;10 anos
+Ma Ning;China;13 anos
