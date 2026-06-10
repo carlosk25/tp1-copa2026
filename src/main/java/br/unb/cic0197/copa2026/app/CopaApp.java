@@ -59,6 +59,7 @@ public class CopaApp extends JFrame {
     public void start() {
         mostrarTela("login");
         setVisible(true);
+   
     }
 
     private void loadData() {
@@ -104,6 +105,7 @@ public class CopaApp extends JFrame {
     }
 
     private void setupScreens() {
+
         container.add(new TelaLogin(this), "login");
         container.add(new TelaCadastro(this), "cadastro");
         container.add(new TelaMenu(this), "menu");
@@ -258,9 +260,4 @@ public class CopaApp extends JFrame {
         return UUID.randomUUID().toString();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new CopaApp().setVisible(true);
-        });
-    }
 }

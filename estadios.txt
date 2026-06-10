@@ -1,0 +1,15 @@
+MetLife Stadium;East Rutherford, EUA;82500
+AT&T Stadium;Arlington, EUA;80000
+SoFi Stadium;Los Angeles, EUA;70240
+Mercedes-Benz Stadium;Atlanta, EUA;71000
+NRG Stadium;Houston, EUA;72220
+Lincoln Financial Field;Philadelphia, EUA;69596
+Lumen Field;Seattle, EUA;68740
+Levi's Stadium;Santa Clara, EUA;68500
+Gillette Stadium;Foxborough, EUA;65878
+Hard Rock Stadium;Miami Gardens, EUA;65326
+BC Place;Vancouver, Canadá;54500
+BMO Field;Toronto, Canadá;45000
+Estadio Akron;Guadalajara, México;49850
+Estadio BBVA;Monterrey, México;53500
+Estadio Azteca;Cidade do México, México;87523

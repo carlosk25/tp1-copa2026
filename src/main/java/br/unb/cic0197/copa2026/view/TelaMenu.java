@@ -14,57 +14,90 @@ public class TelaMenu extends JPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
-        setBackground(new Color(240, 248, 255));
+        setBackground(new Color(245, 247, 250));
 
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
-        headerPanel.setBackground(new Color(0, 100, 0));
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel header = new JPanel(new BorderLayout());
+        header.setBackground(new Color(25, 118, 210));
+        header.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        JLabel titleLabel = new JLabel("Copa 2026 - Menu");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
-        titleLabel.setForeground(Color.WHITE);
+        JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+
+        JLabel titulo = new JLabel("Copa do Mundo 2026");
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titulo.setForeground(Color.WHITE);
+
+        JLabel subtitulo = new JLabel("Sistema de Gerenciamento");
+        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        subtitulo.setForeground(Color.WHITE);
+
+        titlePanel.add(titulo);
+        titlePanel.add(subtitulo);
+
+        JButton sair = new JButton("Sair");
+        sair.addActionListener(e -> app.mostrarTela("login"));
+
+        header.add(titlePanel, BorderLayout.WEST);
+        header.add(sair, BorderLayout.EAST);
+
+        add(header, BorderLayout.NORTH);
+
+        JPanel cards = new JPanel(new GridLayout(2, 3, 25, 25));
+        cards.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        cards.setBackground(getBackground());
+
+        cards.add(createCard("Jogadores", "jogadores",
+                new Color(52, 152, 219)));
+
+        cards.add(createCard("Seleções", "selecoes",
+                new Color(46, 204, 113)));
+
+        cards.add(createCard("Partidas", "partidas",
+                new Color(241, 196, 15)));
+
+        cards.add(createCard("Estádios", "estadios",
+                new Color(231, 76, 60)));
+
+        cards.add(createCard("Árbitros", "arbitros",
+                new Color(155, 89, 182)));
+
+        cards.add(createCard("Relatórios", "relatorios",
+                new Color(52, 73, 94)));
+
+        add(cards, BorderLayout.CENTER);
+    }
+
+    private JPanel createCard(
+            String titulo,
+            String tela,
+            Color color) {
+
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 220, 220)),
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+
+        JLabel titleLabel = new JLabel(titulo);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        headerPanel.add(titleLabel);
 
-        headerPanel.add(Box.createRigidArea(new Dimension(0, 10))); 
+        JButton acessar = new JButton("Acessar");
+        acessar.setBackground(color);
+        acessar.setForeground(Color.WHITE);
+        acessar.setFocusPainted(false);
+        acessar.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-       
-        JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
-        menuPanel.setOpaque(false); 
-        
-        menuPanel.add(createMenuButton("Jogadores", "jogadores", new Color(52, 152, 219)));
-        menuPanel.add(createMenuButton("Seleções", "selecoes", new Color(46, 204, 113)));
-        menuPanel.add(createMenuButton("Partidas", "partidas", new Color(241, 196, 15)));
-        menuPanel.add(createMenuButton("Estádios", "estadios", new Color(231, 76, 60)));
-        menuPanel.add(createMenuButton("Árbitros", "arbitros", new Color(155, 89, 182)));
-        menuPanel.add(createMenuButton("Relatórios", "relatorios", new Color(52, 73, 94)));
+        acessar.addActionListener(e -> app.mostrarTela(tela));
 
-        headerPanel.add(menuPanel);
-        add(headerPanel, BorderLayout.NORTH);
+        card.add(Box.createVerticalStrut(10));
+        card.add(titleLabel);
+        card.add(Box.createVerticalGlue());
+        card.add(acessar);
 
-        JPanel centerArea = new JPanel();
-        centerArea.setOpaque(false);
-        add(centerArea, BorderLayout.CENTER);
-
-        // Botão logout (Sair)
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottomPanel.setBackground(new Color(240, 248, 255));
-        JButton logoutButton = new JButton("Sair");
-        logoutButton.addActionListener(e -> app.mostrarTela("login"));
-        bottomPanel.add(logoutButton);
-        add(bottomPanel, BorderLayout.SOUTH);
+        return card;
     }
 
-    private JButton createMenuButton(String text, String tela, Color color) {
-        JButton button = new JButton(text);
-        button.setBackground(color);
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 12)); 
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.addActionListener(e -> app.mostrarTela(tela));
-        return button;
-    }
 }
