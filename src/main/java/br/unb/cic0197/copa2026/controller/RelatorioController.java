@@ -1,10 +1,14 @@
 package br.unb.cic0197.copa2026.controller;
 
-import br.unb.cic0197.copa2026.model.*;
-import br.unb.cic0197.copa2026.services.UsuarioService;
-import br.unb.cic0197.copa2026.view.TelaRelatorio;
-import javax.swing.*;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import br.unb.cic0197.copa2026.model.Administrador;
+import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
+import br.unb.cic0197.copa2026.model.Usuario;
+import br.unb.cic0197.copa2026.service.UsuarioService;
+import br.unb.cic0197.copa2026.view.TelaRelatorio;
 
 public class RelatorioController {
     private final TelaRelatorio view;

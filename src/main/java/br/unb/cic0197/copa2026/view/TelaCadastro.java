@@ -1,17 +1,27 @@
 package br.unb.cic0197.copa2026.view;
     
-import br.unb.cic0197.copa2026.app.CopaApp;
-import br.unb.cic0197.copa2026.controller.UsuarioGerenciador;
-import br.unb.cic0197.copa2026.exception.UsuarioJaCadastradoException;
-import br.unb.cic0197.copa2026.model.Administrador;
-import br.unb.cic0197.copa2026.model.Arbitro;
-import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
-import br.unb.cic0197.copa2026.model.Usuario;
-import br.unb.cic0197.copa2026.services.UsuarioService;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import br.unb.cic0197.copa2026.app.CopaApp;
+import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
+import br.unb.cic0197.copa2026.service.UsuarioService;
 
 public class TelaCadastro extends JPanel {
     private CopaApp app;

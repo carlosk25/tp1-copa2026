@@ -1,11 +1,11 @@
 package br.unb.cic0197.copa2026.controller;
 
-import br.unb.cic0197.copa2026.model.Usuario;
-import br.unb.cic0197.copa2026.model.Administrador;
-import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
-import br.unb.cic0197.copa2026.services.UsuarioService;
 import java.util.List;
+
 import br.unb.cic0197.copa2026.exception.UsuarioInvalidoException;
+import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
+import br.unb.cic0197.copa2026.model.Usuario;
+import br.unb.cic0197.copa2026.service.UsuarioService;
 
 
 public class UsuarioGerenciador {

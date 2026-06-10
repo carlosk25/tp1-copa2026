@@ -1,4 +1,4 @@
-package br.unb.cic0197.copa2026.services;
+package br.unb.cic0197.copa2026.service;
 
 import br.unb.cic0197.copa2026.model.Usuario;
 import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
