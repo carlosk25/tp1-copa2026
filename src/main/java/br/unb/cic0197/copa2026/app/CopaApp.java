@@ -199,7 +199,7 @@ public class CopaApp extends JFrame {
         saveEstadios();
         saveArbitros();
         saveDesignacoes();
-        savePartidas();
+        // savePartidas();
     }
 
     private void saveSelecoes() {
@@ -242,11 +242,11 @@ public class CopaApp extends JFrame {
         }
     }
 
-    private void savePartidas() {
-        // As partidas são salvas automaticamente pelo PartidaRepository
-        // através de add/update/delete em TelaPartida via PartidaService
-        // Não precisa de salvamento manual aqui
-    }
+    // private void savePartidas() {
+    //     // As partidas são salvas automaticamente pelo PartidaRepository
+    //     // através de add/update/delete em TelaPartida via PartidaService
+    //     // Não precisa de salvamento manual aqui
+    // }
 
     private void showSaveError(String tipo, IOException e) {
         JOptionPane.showMessageDialog(this,
