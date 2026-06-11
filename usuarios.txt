@@ -1,1 +1,2 @@
 Administrador Geral|master@copa.com|admin123|01/01/1990|false|Administrador
+Administrador Geral|admin@copa.com|admin12|01/01/1990|true|Administrador

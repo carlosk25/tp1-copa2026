@@ -115,6 +115,7 @@ public class CopaApp extends JFrame {
         container.add(new EstadioView(this), "estadios");
         container.add(new ArbitroView(this), "arbitros");
         container.add(new TelaRelatorio(this), "relatorios");
+        container.add(new TelaGestaoDeUsuarios(this), "gestaoUsuarios");
 
         add(container);
     }

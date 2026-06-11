@@ -18,7 +18,7 @@ public class TelaRelatorio extends JPanel {
 
     public TelaRelatorio(CopaApp app) {
         this.app = app;
-        this.controller = new RelatorioController(); e
+        this.controller = new RelatorioController();
         initComponents();
     }
 
