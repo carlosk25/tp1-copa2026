@@ -1,27 +1,23 @@
 package br.unb.cic0197.copa2026.view;
     
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
 import br.unb.cic0197.copa2026.app.CopaApp;
+import br.unb.cic0197.copa2026.controller.UsuarioGerenciador;
+import br.unb.cic0197.copa2026.exception.UsuarioJaCadastradoException;
+import br.unb.cic0197.copa2026.model.Administrador;
+import br.unb.cic0197.copa2026.model.Arbitro;
 import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
+import br.unb.cic0197.copa2026.model.Usuario;
 import br.unb.cic0197.copa2026.service.UsuarioService;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+
+import static br.unb.cic0197.copa2026.controller.UsuarioGerenciador.adicionarSolicitacao;
 
 public class TelaCadastro extends JPanel {
     private CopaApp app;
@@ -118,8 +114,8 @@ public class TelaCadastro extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(emailField, gbc);
 
-        // Senha - Cadastro com a senha gerada pelo admin
-        /*
+
+
         gbc.gridy = 5;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.EAST;
@@ -154,7 +150,7 @@ public class TelaCadastro extends JPanel {
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(confirmarSenhaField, gbc);
-        */
+
         // Tipo de Acesso
         gbc.gridy = 7;
         gbc.gridx = 0;
@@ -215,25 +211,125 @@ public class TelaCadastro extends JPanel {
     }
 
 
-    private void finalizarCadastro() {
-      
-        String nome = nomeField.getText();                  
-        String email = emailField.getText();                
-        String dataNasc = dataNascimentoField.getText();
-        String perfil = tipoAcessoCombo.getSelectedItem().toString();
+    private void finalizarCadastro() { 
+        String nome = nomeField.getText().trim();
+        String email = emailField.getText().trim();
+        String dataNasc = dataNascimentoField.getText().trim();
+        String tipoPerfil = (String) tipoAcessoCombo.getSelectedItem();
 
-        SolicitacaoCadastro novaSolicitacao = new SolicitacaoCadastro(nome, email, dataNasc, perfil);
-        UsuarioService usuarioService = new UsuarioService();
+        String senha = new String(senhaField.getPassword());
+        String confirmarSenha = new String(confirmarSenhaField.getPassword());
+
+    
+        if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty() || dataNasc.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos obrigatórios!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+       
+        String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        if (!java.util.regex.Pattern.matches(regexEmail, email)) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira um e-mail com estrutura válida!\nExemplo: usuario@email.com", "E-mail Inválido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        java.time.LocalDate dataNascimentoValida;
+        try {
+            dataNascimentoValida = java.time.LocalDate.parse(dataNasc, formatter);
+        } catch (java.time.format.DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this, "A data de nascimento deve estar no formato correto: DD/MM/AAAA", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        java.time.LocalDate dataAtual = java.time.LocalDate.now();
+        if (dataNascimentoValida.isAfter(dataAtual)) {
+            JOptionPane.showMessageDialog(this, "A data de nascimento não pode ser uma data futura!", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idade = java.time.Period.between(dataNascimentoValida, dataAtual).getYears();
+        if (idade < 18) {
+            JOptionPane.showMessageDialog(this, "Cadastro não permitido: O usuário deve ter pelo menos 18 anos de idade.", "Menor de Idade", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        
+        if (!senha.equals(confirmarSenha)) {
+            JOptionPane.showMessageDialog(this, "As senhas digitadas não coincidem! Tente novamente.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+            senhaField.setText("");
+            confirmarSenhaField.setText("");
+            return;
+        }
+
+        if (senha.length() < 4) {
+            JOptionPane.showMessageDialog(this, "A senha deve conter pelo menos 4 caracteres por segurança.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         try {
-            usuarioService.cadastrarSolicitacao(novaSolicitacao);
-            JOptionPane.showMessageDialog(this, "Solicitação de cadastro enviada aos administradores com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            
+            SolicitacaoCadastro novaSolicitacao = new SolicitacaoCadastro(nome, email, senha, dataNasc, tipoPerfil);
+
+            // Envia para o gerenciador salvar no txt
+            adicionarSolicitacao(novaSolicitacao);
+
+            JOptionPane.showMessageDialog(this, "Solicitação de cadastro enviada! Aguarde a aprovação de um Administrador.");
+
+            // Limpa os campos após o sucesso
+            nomeField.setText("");
+            emailField.setText("");
+            dataNascimentoField.setText("");
+            senhaField.setText("");
+            confirmarSenhaField.setText("");
+
+            // Volta para a tela de login
             app.mostrarTela("login");
+
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro no Cadastro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao processar solicitação: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+    private boolean validarCamposCadastro (String email, String dataNascimento) {
+        // validaçao email
+        String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        if (!Pattern.matches(regexEmail, email)) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, insira um e-mail com estrutura válida!\nExemplo: usuario@email.com",
+                    "E-mail Inválido", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
 
+        // validação data (Espera dd/MM/yyyy)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNasc;
+        try {
+            dataNasc = LocalDate.parse(dataNascimento, formatter);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this,
+                    "A data de nascimento deve estar no formato correto: DD/MM/AAAA",
+                    "Data Inválida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // maioridade (Mínimo 18 anos em relação ao ano atual de 2026)
+        LocalDate dataAtual = LocalDate.now(); 
+        if (dataNasc.isAfter(dataAtual)) {
+            JOptionPane.showMessageDialog(this, "A data de nascimento não pode ser uma data futura!", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        int idade = Period.between(dataNasc, dataAtual).getYears();
+        if (idade < 18) {
+            JOptionPane.showMessageDialog(this,
+                    "Cadastro não permitido: O usuário deve ter pelo menos 18 anos de idade.",
+                    "Menor de Idade", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
     private void limparCampos() {
         nomeField.setText("");
         dataNascimentoField.setText("");
