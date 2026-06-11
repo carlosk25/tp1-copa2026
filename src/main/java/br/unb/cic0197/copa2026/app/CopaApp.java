@@ -259,5 +259,32 @@ public class CopaApp extends JFrame {
     public String gerarId() {
         return UUID.randomUUID().toString();
     }
+    
+    public TelaGestaoDeUsuarios getTelaGestaoDeUsuarios() {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof  TelaGestaoDeUsuarios) {
+                return (TelaGestaoDeUsuarios) comp;
+            }
+        }
+        return null;
+    }
+
+    public TelaMenu getTelaMenu() {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof TelaMenu) {
+                return (TelaMenu) comp;
+            }
+        }
+        return null;
+    }
+
+    public TelaRelatorio getTelaRelatorio() {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof TelaRelatorio) {
+                return (TelaRelatorio) comp;
+            }
+        }
+        return null;
+    }
 
 }
