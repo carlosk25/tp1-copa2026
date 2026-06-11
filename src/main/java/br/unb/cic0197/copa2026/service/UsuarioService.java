@@ -11,12 +11,30 @@ import java.util.Optional;
 import br.unb.cic0197.copa2026.model.*;
 import br.unb.cic0197.copa2026.exception.UsuarioInvalidoException;
 
-
 public class UsuarioService {
     private final UsuarioRepository repository;
 
     public UsuarioService() {
-        this.repository = new UsuarioRepository();
+        this.repository = new UsuarioRepository(); 
+        inicializarAdminPadrao();                 
+    }
+
+    private void inicializarAdminPadrao() {
+        String emailAdmin = "admin@copa.com";
+
+        if (!repository.findById(emailAdmin).isPresent()) {
+            // Cria o administrador usando o construtor correto de 4 argumentos
+            Administrador adminPadrao = new Administrador(
+                    "Administrador Geral",
+                    emailAdmin,
+                    "admin12",
+                    "01/01/1990"
+            );
+
+            // Salva usando o método correto do seu repositório (save)
+            repository.add(adminPadrao);
+            System.out.println("🚀 Admin padrão pré-carregado via Camada de Serviço!");
+        }
     }
 
     public List<Usuario> obtertodas() {
@@ -68,16 +86,24 @@ public class UsuarioService {
         repository.salvarTodasSolicitacoes(solicitacoes);
     }
 
-    public void atualizarSenhaPrimeiroAcesso (String email, String novaSenha) throws UsuarioInvalidoException {
-        Optional<Usuario> usuarioOpt = repository.findById(email);
-        if (!usuarioOpt.isPresent()) {
-            throw new UsuarioInvalidoException("Usuário não encontrado para atualização de senha.");
-        }
+    public void atualizarSenhaPrimeiroAcesso(String email, String novaSenha) {
 
-        Usuario usuario = usuarioOpt.get();
-        usuario.setSenha(novaSenha);
-        usuario.setPrimeiroAcesso(false); 
-        repository.update(usuario);
+        java.util.Optional<br.unb.cic0197.copa2026.model.Usuario> usuarioOpt = repository.findById(email);
+
+        if (usuarioOpt.isPresent()) {
+            br.unb.cic0197.copa2026.model.Usuario usuario = usuarioOpt.get();
+
+
+            usuario.setSenha(novaSenha);
+
+            usuario.setPrimeiroAcesso(false);
+
+            repository.update(usuario);
+
+            System.out.println("🔒 Senha atualizada com sucesso para o usuário: " + email);
+        } else {
+            throw new RuntimeException("Usuário não encontrado para atualização de senha.");
+        }
     }
 
     public String aprovarSolicitacao(SolicitacaoCadastro solicitacao) {
@@ -102,6 +128,15 @@ public class UsuarioService {
         repository.salvarTodasSolicitacoes(solicitacoes);
 
         return senhaInicial;
+
+    }
+    public void reprovarSolicitacao(SolicitacaoCadastro solicitacao) {
+
+        List<SolicitacaoCadastro> solicitacoes = repository.findAllSolicitacoes();
+
+        solicitacoes.removeIf(s -> s.getEmail().equalsIgnoreCase(solicitacao.getEmail()));
+
+        repository.salvarTodasSolicitacoes(solicitacoes);
     }
   
     public void editarUsuario(String nome, String email, String senha, String dataNascimento, boolean primeiroAcesso, String tipoPerfil) {
@@ -126,5 +161,6 @@ public class UsuarioService {
             repository.delete(usuarioOpt.get());
         }
     }
+
 
 }
