@@ -9,16 +9,19 @@ public class SolicitacaoCadastro implements Serializable {
     private String email;
     private String dataNascimento;
     private String tipoPerfilSolicitado;
+    private String senha;
 
-    public SolicitacaoCadastro(String nome, String email, String dataNascimento, String tipoPerfilSolicitado) {
+    public SolicitacaoCadastro(String nome, String email, String senha, String dataNascimento, String tipoPerfilSolicitado) {
         this.nome = nome;
         this.email = email;
+        this.senha = senha;
         this.dataNascimento = dataNascimento;
         this.tipoPerfilSolicitado = tipoPerfilSolicitado;
     }
 
     public String getNome() { return nome; }
     public String getEmail() { return email; }
+    public String getSenha() { return senha; }
     public String getDataNascimento() { return dataNascimento; }
     public String getTipoPerfilSolicitado() { return tipoPerfilSolicitado; }
 }
