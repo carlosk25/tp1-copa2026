@@ -1,88 +1,69 @@
 package br.unb.cic0197.copa2026.controller;
 
+import br.unb.cic0197.copa2026.service.PartidaService;
+import br.unb.cic0197.copa2026.service.JogadorService;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
-import br.unb.cic0197.copa2026.model.Administrador;
-import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
-import br.unb.cic0197.copa2026.model.Usuario;
-import br.unb.cic0197.copa2026.service.UsuarioService;
-import br.unb.cic0197.copa2026.view.TelaRelatorio;
-
 public class RelatorioController {
-    private final TelaRelatorio view;
-    private final UsuarioService usuarioService;
+    private final PartidaService partidaService;
+    private final JogadorService jogadorService;
 
-    public RelatorioController(TelaRelatorio view) {
-        this.view = view;
-        this.usuarioService = new UsuarioService();
+    public RelatorioController() {
+        this.partidaService = new PartidaService();
+        this.jogadorService = new JogadorService();
     }
 
-    public void configurarPermissoesExibicao() {
-        Usuario logado = SessaoSistema.getUsuarioLogado();
+    public List<Object[]> obterDadosConsolidados() {
+        List<Object[]> dadosTabela = new ArrayList<>();
 
-        if (logado == null || !(logado instanceof Administrador)) {
-            view.getPainelAdminAprovacao().setVisible(false);
-        } else {
-            view.getPainelAdminAprovacao().setVisible(true);
-            carregarSolicitacoesPendentes();
-        }
-        carregarUsuariosEMetricas();
-    }
-
-    public void carregarSolicitacoesPendentes() {
-        view.getModeloSolicitacoes().setRowCount(0);
-  
-        List<SolicitacaoCadastro> solicitacoes = usuarioService.obterTodasSolicitacoes();
-        for (SolicitacaoCadastro s : solicitacoes) {
-            view.getModeloSolicitacoes().addRow(new Object[]{
-                    s.getNome(),
-                    s.getEmail(),
-                    s.getTipoPerfilSolicitado()
-            });
-        }
-    }
-
-    public void carregarUsuariosEMetricas() {
-        view.getModeloUsuarios().setRowCount(0);
-        view.getModeloUsuarios().addRow(new Object[]{"Métrica: Total de Partidas", "Global", "64 partidas registradas"});
-
-        List<Usuario> usuarios = usuarioService.obtertodas();
-        for (Usuario u : usuarios) {
-            view.getModeloUsuarios().addRow(new Object[]{
-                    u.getNome(),
-                    u.getTipoPerfil(),
-                    u.obterDadosMetricaConsolidada()
-            });
-        }
-    }
-
-    public void executarAprovacao() {
-        int linhaSelecionada = view.getTabelaSolicitacoes().getSelectedRow();
-        if (linhaSelecionada == -1) {
-            JOptionPane.showMessageDialog(view, "Selecione uma solicitação na tabela acima para aprovar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        List<SolicitacaoCadastro> solicitacoes = usuarioService.obterTodasSolicitacoes();
-        SolicitacaoCadastro solicitacaoEscolhida = solicitacoes.get(linhaSelecionada);
-
+       
         try {
-          
-            String senhaGerada = usuarioService.aprovarSolicitacao(solicitacaoEscolhida);
+            
+            List<br.unb.cic0197.copa2026.model.Partida> partidas = partidaService.obterTodas();
 
-            JOptionPane.showMessageDialog(view,
-                    "Cadastro aprovado com sucesso!\n\n" +
-                            "SENHA TEMPORÁRIA GERADA: " + senhaGerada + "\n" +
-                            "Forneça essa senha ao usuário. Ele será obrigado a alterá-la no primeiro acesso.",
-                    "Acesso Liberado", JOptionPane.INFORMATION_MESSAGE);
+            // Linha de métrica global (Resumo)
+            dadosTabela.add(new Object[]{
+                    "MÉTRICA GLOBAL",
+                    "Total de Partidas da Competição",
+                    "Copa do Mundo 2026",
+                    partidas.size() + " partidas",
+                    "-"
+            });
 
-            carregarSolicitacoesPendentes();
-            carregarUsuariosEMetricas();
+            
+            for (br.unb.cic0197.copa2026.model.Partida p : partidas) {
+                dadosTabela.add(new Object[]{
+                        "PARTIDA",
+                        p.getSelecaoA() + " x " + p.getSelecaoB(), // Envolvendo as seleções
+                        "Fase: " + p.getFase(),
 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(view, "Erro ao aprovar cadastro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                        p.getData()
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao consolidar partidas no controller: " + e.getMessage());
         }
+
+        /* 
+        try {
+            
+            List<br.unb.cic0197.copa2026.model.Jogador> jogadores = jogadorService.obterTodos();
+
+            for (br.unb.cic0197.copa2026.model.Jogador j : jogadores) {
+                dadosTabela.add(new Object[]{
+                        "JOGADOR",
+                        j.getNome(),
+                        "Camisa Nº " + j.getNumero(),
+                        j.getPosicao(),
+                        j.getIdade() + " anos"
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao consolidar jogadores no controller: " + e.getMessage());
+        }
+        */
+        return dadosTabela;
     }
 }
+
