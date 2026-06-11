@@ -137,21 +137,19 @@ public class TelaLogin extends JPanel {
                     return;
                 }
 
-                // Atualiza a senha
-                UsuarioGerenciador.atualizarSenhaPrimeiroAcesso(usuarioLogado.getEmail(), novaSenha);
-                JOptionPane.showMessageDialog(this, "Senha atualizada com sucesso! Faça login novamente com suas novas credenciais.");
-                usuarioField.setText("");
-                senhaField.setText("");
-                return;
+
             }
 
             SessaoSistema.iniciarSessao(usuarioLogado);
             JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuarioLogado.getNome());
-            app.mostrarTela("dashboard");
+            if (app.getTelaMenu() != null) {
+                app.getTelaMenu().renderizarMenu();
+            }
+            app.mostrarTela("menu");
 
-        } catch (UsuarioInvalidoException ex) {
+        } catch (UsuarioInvalidoException ex) { // O seu 'ex' do erro de acesso continua aqui normal!
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro de Acesso", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
+        } catch (Exception ex) { // O seu 'ex' do erro interno continua aqui normal!
             JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage(), "Erro Interno", JOptionPane.ERROR_MESSAGE);
         }
     }
