@@ -226,7 +226,7 @@ import java.awt.*;
 
 public class TelaMenu extends JPanel {
     private CopaApp app;
-    private JPanel cardsContainer; // Container que guardará os blocos (cards) dinâmicos
+    private JPanel cardsContainer; 
 
     public TelaMenu(CopaApp app) {
         this.app = app;
@@ -237,7 +237,6 @@ public class TelaMenu extends JPanel {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 247, 250));
 
-        // --- HEADER SUPERIOR (Design Moderno Azul) ---
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(new Color(25, 118, 210));
         header.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
@@ -257,7 +256,6 @@ public class TelaMenu extends JPanel {
         titlePanel.add(titulo);
         titlePanel.add(subtitulo);
 
-        // Botão Sair com encerramento de sessão correto
         JButton sair = new JButton("Sair");
         sair.setFont(new Font("Segoe UI", Font.BOLD, 12));
         sair.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -271,8 +269,7 @@ public class TelaMenu extends JPanel {
 
         add(header, BorderLayout.NORTH);
 
-        // --- CONTAINER CENTRAL DOS CARDS ---
-        // Inicializa como um Grid adaptável. O layout será redefinido no renderizarMenu().
+        
         cardsContainer = new JPanel();
         cardsContainer.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
         cardsContainer.setBackground(getBackground());
@@ -280,9 +277,7 @@ public class TelaMenu extends JPanel {
         add(cardsContainer, BorderLayout.CENTER);
     }
 
-    /**
-     * Monta os Cards na tela de forma dinâmica baseado em quem está logado no sistema.
-     */
+    
     public void renderizarMenu() {
         // Limpa tudo o que estava na tela antes
         cardsContainer.removeAll();
@@ -291,7 +286,7 @@ public class TelaMenu extends JPanel {
 
         if (usuarioLogado != null) {
             if (usuarioLogado instanceof Organizador) {
-                // Organizador vê 4 itens (Grid 2x2 fica elegante)
+                // Organizador vê 4 itens 
                 cardsContainer.setLayout(new GridLayout(2, 2, 25, 25));
 
                 cardsContainer.add(createCard("Jogadores", "jogadores", new Color(52, 152, 219)));
@@ -300,7 +295,7 @@ public class TelaMenu extends JPanel {
                 cardsContainer.add(createCard("Estádios", "estadios", new Color(231, 76, 60)));
             }
             else if (usuarioLogado instanceof Administrador) {
-                // Administrador vê todos os 7 itens (Grid de 3 colunas)
+                // Administrador vê todos os 7 itens 
                 cardsContainer.setLayout(new GridLayout(0, 3, 25, 25));
 
                 cardsContainer.add(createCard("Jogadores", "jogadores", new Color(52, 152, 219)));
@@ -309,7 +304,7 @@ public class TelaMenu extends JPanel {
                 cardsContainer.add(createCard("Estádios", "estadios", new Color(231, 76, 60)));
                 cardsContainer.add(createCard("Árbitros", "arbitros", new Color(155, 89, 182)));
                 cardsContainer.add(createCard("Relatórios", "relatorios", new Color(52, 73, 94)));
-                cardsContainer.add(createCard("Gestão Usuários", "gestaoUsuarios", new Color(211, 84, 0))); // Alinhado com a sua rota "usuarios"
+                cardsContainer.add(createCard("Gestão Usuários", "gestaoUsuarios", new Color(211, 84, 0))); 
             }
             else {
                 // Árbitro ou outros perfis básicos vêm apenas Partidas
@@ -318,14 +313,11 @@ public class TelaMenu extends JPanel {
             }
         }
 
-        // Força o Swing a redesenhar a tela com as permissões novas aplicado o layout correto
         cardsContainer.revalidate();
         cardsContainer.repaint();
     }
 
-    /**
-     * Construtor estético dos blocos (Cards) clicáveis
-     */
+
     private JPanel createCard(String titulo, String tela, Color color) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -350,7 +342,6 @@ public class TelaMenu extends JPanel {
 
         acessar.addActionListener(e -> app.mostrarTela(tela));
 
-        // Organização dos espaços internos do bloco
         card.add(Box.createVerticalStrut(10));
         card.add(titleLabel);
         card.add(Box.createVerticalGlue());
