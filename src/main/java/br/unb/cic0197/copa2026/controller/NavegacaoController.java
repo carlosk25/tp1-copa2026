@@ -33,22 +33,26 @@ public class NavegacaoController {
 
         // Bloqueio para Gestão de Usuários (Apenas Admin)
         if (nomeTela.equalsIgnoreCase("gestaoUsuarios")) {
-            if (app.getGestaoUsuariosView() != null) {
-                app.getGestaoUsuariosView().atualizarTela();
-                if (logado == null || !(logado instanceof Administrador)) {
-                    return false; // Bloqueia virada de página
+            if (app.getTelaGestaoDeUsuarios() != null) {
+                app.getTelaGestaoDeUsuarios().atualizarTela();
+                if (logado == null || !(logado instanceof br.unb.cic0197.copa2026.model.Administrador)) {
+                    return false;
                 }
             }
         }
 
-        if (nomeTela.equalsIgnoreCase("dashboard") && app.getDashboardView() != null) {
-            app.getDashboardView().renderizarMenu();
+        // Atualizações automáticas antes de abrir a tela correspondente
+        if (nomeTela.equalsIgnoreCase("menu") && app.getTelaMenu() != null) {
+            app.getTelaMenu().renderizarMenu();
         }
-        else if (nomeTela.equalsIgnoreCase("relatorios") && app.getRelatorioView() != null) {
-            app.getRelatorioView().atualizarDados();
+        if (nomeTela.equalsIgnoreCase("relatorios")) {
+            if (app.getTelaRelatorio() != null) {
+                app.getTelaRelatorio().atualizarDadosDoRelatorio(); 
+            }
         }
 
         cardLayout.show(container, nomeTela);
         return true;
     }
+
 }
