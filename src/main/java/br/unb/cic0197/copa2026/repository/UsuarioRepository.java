@@ -70,7 +70,7 @@ public class UsuarioRepository {
             while ((linha = br.readLine()) != null) {
                 if (linha.trim().isEmpty()) continue;
                 String[] dados = linha.split(SEPARADOR);
-                lista.add(new SolicitacaoCadastro(dados[0], dados[1], dados[2], dados[3]));
+                lista.add(new SolicitacaoCadastro(dados[0], dados[1], dados[2], dados[3], dados[4]));
             }
         } catch (IOException e) {
             throw new RuntimeException("Falha ao ler solicitações", e);
@@ -81,9 +81,10 @@ public class UsuarioRepository {
     public void salvarTodasSolicitacoes(List<SolicitacaoCadastro> lista) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARQUIVO_SOLICITACOES))) {
             for (SolicitacaoCadastro s : lista) {
-                bw.write(s.getNome() + "|" + s.getEmail() + "|" + s.getDataNascimento() + "|" + s.getTipoPerfilSolicitado());
+                bw.write(s.getNome() + "|" + s.getEmail() + "|" + s.getSenha() + "|" + s.getDataNascimento() + "|" + s.getTipoPerfilSolicitado());
                 bw.newLine();
             }
+            bw.flush();
         } catch (IOException e) {
             throw new RuntimeException("Falha ao salvar solicitações", e);
         }
@@ -130,6 +131,7 @@ public class UsuarioRepository {
                         u.getDataNascimento() + "|" + u.isPrimeiroAcesso() + "|" + u.getTipoPerfil());
                 bw.newLine();
             }
+            bw.flush();
         }
     }
 }
