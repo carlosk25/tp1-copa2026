@@ -15,7 +15,8 @@ public class Administrador extends Usuario {
 
     @Override
     public String obterDadosMetricaConsolidada() {
-        // Implementação polimórfica dos detalhes funcionais
+
         return "Acesso irrestrito: Auditoria de Logs e Modificações de Infraestrutura.";
     }
 }
+
