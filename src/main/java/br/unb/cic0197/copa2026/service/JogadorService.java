@@ -52,12 +52,42 @@ public class JogadorService {
         repository.delete(jogador);
     }
 
+    public void removerPorNome(String nome) throws Copa2026Exception {
+        Optional<Jogador> jogador = buscarPorNome(nome);
+
+        if (jogador.isEmpty()) {
+            throw new Copa2026Exception("Jogador não encontrado para exclusão.");
+        }
+
+        repository.delete(jogador.get());
+    }
+
     public Optional<Jogador> obterPorId(String id) {
         return repository.findById(id);
     }
 
-    public List<Jogador> buscar(String posicao, Jogador.StatusJogador status) {
-        return repository.search(posicao, status);
+    public List<Jogador> buscar(
+            String posicao,
+            String paisSelecao,
+            Jogador.StatusJogador status,
+            Integer numero,
+            Integer idade) {
+
+        return repository.search(
+                posicao,
+                paisSelecao,
+                status,
+                numero,
+                idade
+        );
+    }
+
+    public Optional<Jogador> buscarPorNome(String nome) {
+        if (nome == null || nome.isBlank()) {
+            return Optional.empty();
+        }
+
+        return repository.findByNome(nome);
     }
 
     public void validarJogador(Jogador jogador)

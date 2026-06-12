@@ -1,1 +1,8 @@
-8253a090-0c80-4b49-9474-b79c4c25c72f;Brasil;Grupo 1;Dorival
+dd33039f-5e7a-419b-bdb0-74d98b5e8cca;Brasil;Grupo 1;Ancelotti
+b1f4c31d-7c4f-42a0-a12d-123456789001;Argentina;Grupo 1;Scaloni
+c2a8f72e-3d9a-41b2-8d30-123456789002;França;Grupo 2;Deschamps
+d9e1a5b0-6a4f-48c1-9b22-123456789003;Espanha;Grupo 2;De la Fuente
+e7b2c8a1-5f10-4b77-8c91-123456789004;Alemanha;Grupo 3;Nagelsmann
+f4c3d2e1-8a9b-40c5-9177-123456789005;Portugal;Grupo 3;Roberto Martínez
+a8b7c6d5-4e3f-42a1-9d88-123456789006;Inglaterra;Grupo 4;Tuchel
+f9e8d7c6-5b4a-4312-8c77-123456789007;Itália;Grupo 4;Spalletti

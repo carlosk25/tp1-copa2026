@@ -32,21 +32,11 @@ public class SelecaoController {
         selecaoService.remover(selecao);
     }
 
-    public Optional<Selecao> obterSelecaoPorId(String id) {
-        return selecaoService.obterPorId(id);
-    }
-
     public List<Selecao> buscarSelecoesPorGrupo(String grupo) {
         return selecaoService.buscarPorGrupo(grupo);
     }
 
-    public void adicionarJogador(Selecao selecao, Jogador jogador)
-            throws Copa2026Exception {
-        selecaoService.adicionarJogador(selecao, jogador);
-    }
-
-    public void validarElencoCompleto(Selecao selecao)
-            throws Copa2026Exception {
-        selecaoService.validarElencoCompleto(selecao);
+    public Optional<Selecao> buscarSelecaoPorPais(String pais) {
+        return selecaoService.buscarPorPais(pais);
     }
 }

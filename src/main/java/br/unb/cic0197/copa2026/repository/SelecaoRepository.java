@@ -32,21 +32,15 @@ public class SelecaoRepository {
     public void update(Selecao selecao) {
         try {
             List<Selecao> selecoes = carregar();
-            boolean atualizado = false;
 
             for (int i = 0; i < selecoes.size(); i++) {
                 if (selecoes.get(i).getId().equals(selecao.getId())) {
                     selecoes.set(i, selecao);
-                    atualizado = true;
-                    break;
+                    salvar(selecoes);
+                    return;
                 }
             }
 
-            if (!atualizado) {
-                selecoes.add(selecao);
-            }
-
-            salvar(selecoes);
         } catch (IOException e) {
             throw new RuntimeException("Falha ao atualizar seleção", e);
         }
@@ -84,6 +78,13 @@ public class SelecaoRepository {
         }
 
         return resultado;
+    }
+
+    public Optional<Selecao> findByPais(String pais) {
+        return findAll()
+                .stream()
+                .filter(s -> s.getPais().equalsIgnoreCase(pais))
+                .findFirst();
     }
 
     public void salvar(List<Selecao> selecoes) throws IOException {

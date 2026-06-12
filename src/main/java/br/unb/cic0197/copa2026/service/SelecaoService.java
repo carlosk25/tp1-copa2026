@@ -4,6 +4,7 @@ import br.unb.cic0197.copa2026.exception.Copa2026Exception;
 import br.unb.cic0197.copa2026.model.Jogador;
 import br.unb.cic0197.copa2026.model.Selecao;
 import br.unb.cic0197.copa2026.repository.SelecaoRepository;
+import br.unb.cic0197.copa2026.repository.JogadorRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +12,11 @@ import java.util.Optional;
 public class SelecaoService {
 
     private final SelecaoRepository repository;
+    private final JogadorRepository jogadorRepository;
 
     public SelecaoService() {
         this.repository = new SelecaoRepository();
+        this.jogadorRepository = new JogadorRepository();
     }
 
     public List<Selecao> obterTodas() {
@@ -28,6 +31,7 @@ public class SelecaoService {
 
     public void atualizar(Selecao selecao) throws Copa2026Exception {
         validarSelecao(selecao);
+        validarSelecaoDuplicada(selecao);
 
         Optional<Selecao> existente = repository.findById(selecao.getId());
 
@@ -49,6 +53,8 @@ public class SelecaoService {
             throw new Copa2026Exception("Seleção não encontrada para exclusão.");
         }
 
+        validarSelecaoSemJogadoresVinculados(selecao);
+
         repository.delete(selecao);
     }
 
@@ -58,6 +64,14 @@ public class SelecaoService {
 
     public List<Selecao> buscarPorGrupo(String grupo) {
         return repository.search(grupo);
+    }
+
+    public Optional<Selecao> buscarPorPais(String pais) {
+        if (pais == null || pais.isBlank()) {
+            return Optional.empty();
+        }
+
+        return repository.findByPais(pais);
     }
 
     public void validarSelecao(Selecao selecao) throws Copa2026Exception {
@@ -97,35 +111,19 @@ public class SelecaoService {
         }
     }
 
-    public void adicionarJogador(Selecao selecao, Jogador jogador)
+
+    private void validarSelecaoSemJogadoresVinculados(Selecao selecao)
             throws Copa2026Exception {
 
-        if (selecao == null) {
-            throw new Copa2026Exception("Seleção inválida.");
-        }
+        for (Jogador jogador : jogadorRepository.findAll()) {
+            if (jogador.getSelecao() != null &&
+                    jogador.getSelecao().getId().equals(selecao.getId())) {
 
-        if (jogador == null) {
-            throw new Copa2026Exception("Jogador inválido.");
-        }
-
-        if (jogador.getNumero() < 1 || jogador.getNumero() > 26) {
-            throw new Copa2026Exception("O número da camisa deve estar entre 1 e 26.");
-        }
-
-        if (selecao.getJogadores().size() >= 26) {
-            throw new Copa2026Exception("Seleção já possui 26 jogadores.");
-        }
-
-        for (Jogador j : selecao.getJogadores()) {
-            if (j.getNumero() == jogador.getNumero()) {
                 throw new Copa2026Exception(
-                        "Este número já está sendo utilizado por outro jogador."
+                        "Não é possível excluir a seleção, pois existem jogadores vinculados a ela."
                 );
             }
         }
-
-        selecao.adicionarJogador(jogador);
-        repository.update(selecao);
     }
 
     public void validarElencoCompleto(Selecao selecao)
@@ -142,6 +140,59 @@ public class SelecaoService {
         if (quantidade > 26) {
             throw new Copa2026Exception(
                     "Seleção não pode ter mais de 26 jogadores."
+            );
+        }
+    }
+
+    public void validarSelecaoAptaParaPartida(String paisSelecao)
+            throws Copa2026Exception {
+
+        Optional<Selecao> selecaoEncontrada = repository.findByPais(paisSelecao);
+
+        if (selecaoEncontrada.isEmpty()) {
+            throw new Copa2026Exception("Seleção não encontrada: " + paisSelecao);
+        }
+
+        Selecao selecao = selecaoEncontrada.get();
+
+        int totalJogadores = 0;
+        int jogadoresDisponiveis = 0;
+
+        for (Jogador jogador : jogadorRepository.findAll()) {
+            boolean mesmaSelecao =
+                    jogador.getSelecao() != null &&
+                            jogador.getSelecao().getId().equals(selecao.getId());
+
+            if (mesmaSelecao) {
+                totalJogadores++;
+
+                if (jogador.getStatus() == Jogador.StatusJogador.ATIVO) {
+                    jogadoresDisponiveis++;
+                }
+            }
+        }
+
+        if (totalJogadores < 16) {
+            throw new Copa2026Exception(
+                    "A seleção " + selecao.getPais() +
+                            " precisa ter pelo menos 16 jogadores cadastrados. " +
+                            "Total cadastrado: " + totalJogadores + "."
+            );
+        }
+
+        if (totalJogadores > 26) {
+            throw new Copa2026Exception(
+                    "A seleção " + selecao.getPais() +
+                            " não pode ter mais de 26 jogadores cadastrados. " +
+                            "Total cadastrado: " + totalJogadores + "."
+            );
+        }
+
+        if (jogadoresDisponiveis < 16) {
+            throw new Copa2026Exception(
+                    "A seleção " + selecao.getPais() +
+                            " não possui jogadores disponíveis suficientes para participar da partida. " +
+                            "Mínimo necessário: 16. Disponíveis: " + jogadoresDisponiveis + "."
             );
         }
     }

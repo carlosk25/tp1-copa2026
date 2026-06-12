@@ -31,14 +31,36 @@ public class JogadorController {
         jogadorService.remover(jogador);
     }
 
+    public void removerJogadorPorNome(String nome) throws Copa2026Exception {
+        jogadorService.removerPorNome(nome);
+    }
+
     public Optional<Jogador> obterJogadorPorId(String id) {
         return jogadorService.obterPorId(id);
     }
 
+    public Optional<Jogador> buscarJogadorPorNome(String nome) {
+        for (Jogador jogador : jogadorService.obterTodos()) {
+            if (jogador.getNome().equalsIgnoreCase(nome)) {
+                return Optional.of(jogador);
+            }
+        }
+
+        return Optional.empty();
+    }
     public List<Jogador> buscarJogadores(
             String posicao,
-            Jogador.StatusJogador status) {
+            String paisSelecao,
+            Jogador.StatusJogador status,
+            Integer numero,
+            Integer idade) {
 
-        return jogadorService.buscar(posicao, status);
+        return jogadorService.buscar(
+                posicao,
+                paisSelecao,
+                status,
+                numero,
+                idade
+        );
     }
 }

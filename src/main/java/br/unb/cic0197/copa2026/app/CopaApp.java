@@ -133,34 +133,6 @@ public class CopaApp extends JFrame {
         cardLayout.show(container, nomeTela);
     }
 
-    public void adicionarSelecao(Selecao selecao) {
-        selecoes.add(selecao);
-        saveSelecoes();
-    }
-
-    public void removerSelecaoPorPais(String pais) {
-        selecoes.removeIf(s -> s.getPais().equalsIgnoreCase(pais));
-        saveSelecoes();
-    }
-
-    public Selecao findSelecaoPorPais(String pais) {
-        for (Selecao selecao : selecoes) {
-            if (selecao.getPais().equalsIgnoreCase(pais)) {
-                return selecao;
-            }
-        }
-        return null;
-    }
-
-    public void adicionarJogador(Jogador jogador) {
-        jogadores.add(jogador);
-        saveJogadores();
-    }
-
-    public void removerJogadorPorNome(String nome) {
-        jogadores.removeIf(j -> j.getNome().equalsIgnoreCase(nome));
-        saveJogadores();
-    }
 
     public void adicionarEstadio(Estadio estadio) {
         estadios.add(estadio);
@@ -197,28 +169,10 @@ public class CopaApp extends JFrame {
     }
 
     public void saveAll() {
-        saveSelecoes();
-        saveJogadores();
         saveEstadios();
         saveArbitros();
         saveDesignacoes();
         // savePartidas();
-    }
-
-    private void saveSelecoes() {
-        try {
-            selecaoRepository.salvar(selecoes);
-        } catch (IOException e) {
-            showSaveError("seleções", e);
-        }
-    }
-
-    private void saveJogadores() {
-        try {
-            jogadorRepository.salvar(jogadores);
-        } catch (IOException e) {
-            showSaveError("jogadores", e);
-        }
     }
 
     private void saveEstadios() {

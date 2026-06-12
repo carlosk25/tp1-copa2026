@@ -43,6 +43,6 @@ public class Selecao {
 
     @Override
     public String toString() {
-        return pais + " (Grupo " + grupo + ")";
+        return pais + " (" + grupo + ")";
     }
 }

@@ -76,17 +76,47 @@ public class JogadorRepository {
                 .findFirst();
     }
 
-    public List<Jogador> search(String posicao, Jogador.StatusJogador status) {
+    public Optional<Jogador> findByNome(String nome) {
+        return findAll()
+                .stream()
+                .filter(j -> j.getNome().equalsIgnoreCase(nome))
+                .findFirst();
+    }
+
+    public List<Jogador> search(
+            String posicao,
+            String paisSelecao,
+            Jogador.StatusJogador status,
+            Integer numero,
+            Integer idade) {
+
         List<Jogador> resultado = new ArrayList<>();
 
-        for (Jogador j : findAll()) {
-            boolean posicaoOk = posicao == null || posicao.isBlank() ||
-                    j.getPosicao().equalsIgnoreCase(posicao);
+        for (Jogador jogador : findAll()) {
+            boolean posicaoOk =
+                    posicao == null ||
+                            posicao.isBlank() ||
+                            jogador.getPosicao().equalsIgnoreCase(posicao);
 
-            boolean statusOk = status == null || j.getStatus() == status;
+            boolean selecaoOk =
+                    paisSelecao == null ||
+                            paisSelecao.isBlank() ||
+                            jogador.getSelecao().getPais().equalsIgnoreCase(paisSelecao);
 
-            if (posicaoOk && statusOk) {
-                resultado.add(j);
+            boolean statusOk =
+                    status == null ||
+                            jogador.getStatus() == status;
+
+            boolean numeroOk =
+                    numero == null ||
+                            jogador.getNumero() == numero;
+
+            boolean idadeOk =
+                    idade == null ||
+                            jogador.getIdade() == idade;
+
+            if (posicaoOk && selecaoOk && statusOk && numeroOk && idadeOk) {
+                resultado.add(jogador);
             }
         }
 

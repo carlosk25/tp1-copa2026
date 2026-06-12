@@ -16,11 +16,13 @@ import java.util.Optional;
 
 public class PartidaService {
     private final PartidaRepository repository;
+    private final SelecaoService selecaoService;
     private static final DateTimeFormatter DATA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public PartidaService() {
         this.repository = new PartidaRepository();
+        this.selecaoService = new SelecaoService();
     }
 
     public List<Partida> obterTodas() {
@@ -84,6 +86,8 @@ public class PartidaService {
         if (partida.getSelecaoA().equalsIgnoreCase(partida.getSelecaoB())) {
             throw new Copa2026Exception("Seleção A e Seleção B não podem ser iguais.");
         }
+        validarSelecoesAptasParaPartida(partida);
+
         if (partida.getFase() == null) {
             throw new Copa2026Exception("Fase da competição é obrigatória.");
         }
@@ -144,5 +148,16 @@ public class PartidaService {
                 throw new Copa2026Exception("Uma seleção já está escalada para outra partida no mesmo dia e horário.");
             }
         }
+    }
+
+    private void validarSelecoesAptasParaPartida(Partida partida)
+            throws Copa2026Exception {
+
+        if (partida.getStatus() != StatusPartida.AGENDADA) {
+            return;
+        }
+
+        selecaoService.validarSelecaoAptaParaPartida(partida.getSelecaoA());
+        selecaoService.validarSelecaoAptaParaPartida(partida.getSelecaoB());
     }
 }
