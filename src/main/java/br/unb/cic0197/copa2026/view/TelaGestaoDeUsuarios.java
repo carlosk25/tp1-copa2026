@@ -17,13 +17,11 @@ import java.util.List;
 
 public class TelaGestaoDeUsuarios extends JPanel {
     private CopaApp app;
-
-    // Componentes da Aba 1 (Solicitações)
+    // aba 1
     private DefaultTableModel modeloSolicitacoes;
     private JTable tabelaSolicitacoes;
     private TableRowSorter<DefaultTableModel> sorterSolicitacoes;
-
-    // Componentes da Aba 2 (Gerenciamento)
+    // aba 2
     private DefaultTableModel modeloUsuariosAtivos;
     private JTable tabelaUsuariosAtivos;
     private TableRowSorter<DefaultTableModel> sorterUsuariosAtivos;
@@ -69,11 +67,11 @@ public class TelaGestaoDeUsuarios extends JPanel {
                 new EmptyBorder(15, 15, 15, 15)
         ));
 
-        // --- 3. SISTEMA DE ABAS MODERADO ---
+        // sistema de 2 abas
         JTabbedPane abasPainel = new JTabbedPane();
         abasPainel.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
-        // ------------------ ABA 1: SOLICITAÇÕES PENDENTES ------------------
+        // Aba 1 : Solicitaçoes pendentes
         JPanel painelAba1 = new JPanel(new BorderLayout(10, 10));
         painelAba1.setBackground(Color.WHITE);
 
@@ -116,7 +114,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         painelSulAba1.add(btnVoltarAba1);
         painelAba1.add(painelSulAba1, BorderLayout.SOUTH);
 
-        // ------------------ ABA 2: USUÁRIOS ATIVOS ------------------
+        // Aba 2: usuarios ativos no sistema
         JPanel painelAba2 = new JPanel(new BorderLayout(10, 10));
         painelAba2.setBackground(Color.WHITE);
 
@@ -168,6 +166,14 @@ public class TelaGestaoDeUsuarios extends JPanel {
 
         add(mainContentPanel, BorderLayout.CENTER);
 
+        //atualiza para a solicitação apararecer
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                atualizarTela();
+            }
+        });
+
         atualizarTela();
     }
 
@@ -190,7 +196,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         comboOpcao.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         comboOpcao.setBackground(Color.WHITE);
 
-        // Evento que executa o filtro na tabela em tempo real enquanto digita
+        // executa o filtro na tabela em tempo real enquanto digita
         Runnable aplicarFiltro = () -> {
             String texto = txtPesquisa.getText().trim();
             if (texto.isEmpty()) {
@@ -258,6 +264,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         this.repaint();
     }
 
+
     private void executarAprovacao() {
         int linhaVisivel = tabelaSolicitacoes.getSelectedRow();
         if (linhaVisivel == -1) {
@@ -271,10 +278,21 @@ public class TelaGestaoDeUsuarios extends JPanel {
         SolicitacaoCadastro sol = solicitacoes.get(linha);
 
         try {
-            UsuarioGerenciador.aprovarSolicitacao(sol);
+            // envia a solicitação para aprovar usando a senha do cadastro
+            String senhaUtilizada = br.unb.cic0197.copa2026.controller.UsuarioGerenciador.aprovarSolicitacao(sol);
+
+            String mensagemSucesso = String.format(
+                    "Cadastro aprovado com sucesso!\n\n" +
+                            "📧 Usuário: %s\n" +
+                            "🔑 Senha de Acesso: %s\n\n" +
+                            "O usuário já pode logar utilizando a senha definida por ele no cadastro.",
+                    sol.getEmail(), senhaUtilizada
+            );
+
             JOptionPane.showMessageDialog(this,
-                    "Cadastro aprovado com sucesso!",
-                    "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    mensagemSucesso,
+                    "Usuário Ativado", JOptionPane.INFORMATION_MESSAGE);
+
             atualizarTela();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao aprovar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -360,6 +378,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         }
     }
 
+    //executa uma exclusao de solicitaçao
     private void executarExclusao() {
         int linhaVisivel = tabelaUsuariosAtivos.getSelectedRow();
         if (linhaVisivel == -1) {
@@ -377,7 +396,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         }
 
         String email = (String) modeloUsuariosAtivos.getValueAt(línea, 1);
-        int certeza = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o usuário " + email + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+        int certeza = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o usuário: " + email + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
 
         if (certeza == JOptionPane.YES_OPTION) {
             try {
@@ -401,3 +420,4 @@ public class TelaGestaoDeUsuarios extends JPanel {
         return button;
     }
 }
+
