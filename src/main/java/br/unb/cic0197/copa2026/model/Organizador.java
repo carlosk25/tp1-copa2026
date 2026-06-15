@@ -11,10 +11,4 @@ public class Organizador extends Usuario {
     public String getTipoPerfil() {
         return "Organizador";
     }
-
-    @Override
-    public String obterDadosMetricaConsolidada() {
-        // Implementação polimórfica das responsabilidades do organizador
-        return "Acesso gerencial: Homologação de delegações, escalas de arbitragem e relatórios técnicos.";
-    }
 }
