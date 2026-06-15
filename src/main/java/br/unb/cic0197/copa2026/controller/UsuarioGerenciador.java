@@ -1,7 +1,6 @@
 package br.unb.cic0197.copa2026.controller;
 
 import br.unb.cic0197.copa2026.model.Usuario;
-import br.unb.cic0197.copa2026.model.Administrador;
 import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
 import br.unb.cic0197.copa2026.service.UsuarioService;
 import java.util.List;
@@ -12,9 +11,6 @@ public class UsuarioGerenciador {
 
     private static final UsuarioService usuarioService = new UsuarioService();
 
-    public static List<Usuario> listarTodos() {
-        return usuarioService.obtertodas();
-    }
 
     public static List<SolicitacaoCadastro> listarSolicitacoes() {
         return usuarioService.obterTodasSolicitacoes();
@@ -28,9 +24,6 @@ public class UsuarioGerenciador {
         return usuarioService.autenticar(email, senha);
     }
 
-    public static void atualizarSenhaPrimeiroAcesso(String email, String novaSenha) throws UsuarioInvalidoException {
-        usuarioService.atualizarSenhaPrimeiroAcesso(email, novaSenha);
-    }
 
     public static void editarUsuario(String emailOriginal, String nome, String emailNovo, String dataNascimento, String senha, String tipoPerfil) {
         usuarioService.editarUsuario(nome, emailOriginal, senha, dataNascimento, false, tipoPerfil);
@@ -59,4 +52,5 @@ public class UsuarioGerenciador {
         usuarioService.reprovarSolicitacao(solicitacao);
     }
 }
+
 
