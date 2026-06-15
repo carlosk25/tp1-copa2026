@@ -41,13 +41,6 @@ public class UsuarioService {
         return repository.findAll();
     }
 
-    public List<SolicitacaoCadastro> obterTodasSolicitacoes() {
-        return repository.findAllSolicitacoes();
-    }
-
-    public Optional<Usuario> obterporid(String email) {
-        return repository.findById(email);
-    }
 
     public void salvar(Usuario usuario) {
         if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
@@ -71,7 +64,7 @@ public class UsuarioService {
     }
 
     public void cadastrarSolicitacao(SolicitacaoCadastro solicitacao) throws Exception {
-        // Verifica se o e-mail já não está em uso no sistema
+        // verifica se o email já não está em uso no sistema
         if (repository.findById(solicitacao.getEmail()).isPresent()) {
             throw new UsuarioInvalidoException("E-mail já cadastrado no sistema!");
         }
@@ -86,49 +79,38 @@ public class UsuarioService {
         repository.salvarTodasSolicitacoes(solicitacoes);
     }
 
-    public void atualizarSenhaPrimeiroAcesso(String email, String novaSenha) {
-
-        java.util.Optional<br.unb.cic0197.copa2026.model.Usuario> usuarioOpt = repository.findById(email);
-
-        if (usuarioOpt.isPresent()) {
-            br.unb.cic0197.copa2026.model.Usuario usuario = usuarioOpt.get();
-
-
-            usuario.setSenha(novaSenha);
-
-            usuario.setPrimeiroAcesso(false);
-
-            repository.update(usuario);
-
-            System.out.println("🔒 Senha atualizada com sucesso para o usuário: " + email);
-        } else {
-            throw new RuntimeException("Usuário não encontrado para atualização de senha.");
-        }
-    }
 
     public String aprovarSolicitacao(SolicitacaoCadastro solicitacao) {
-        String primeiroNome = solicitacao.getNome().trim().split(" ")[0];
-        String data = solicitacao.getDataNascimento().trim();
-        String ano = data.length() >= 4 ? data.substring(data.length() - 4) : "2026";
-        String senhaInicial = primeiroNome + ano;
+        // pega a senha real definida pelo usuário no momento do cadastro
+        String senhaCadastro = solicitacao.getSenha();
+
+        // garantia de segurança caso o campo tenha vindo vazio por algum motivo
+        if (senhaCadastro == null || senhaCadastro.isEmpty()) {
+            senhaCadastro = "12345";
+        }
 
         Usuario novoUsuario;
         if (solicitacao.getTipoPerfilSolicitado().equalsIgnoreCase("Administrador")) {
-            novoUsuario = new Administrador(solicitacao.getNome(), solicitacao.getEmail(), senhaInicial, solicitacao.getDataNascimento());
+            novoUsuario = new Administrador(solicitacao.getNome(), solicitacao.getEmail(), senhaCadastro, solicitacao.getDataNascimento());
         } else if (solicitacao.getTipoPerfilSolicitado().equalsIgnoreCase("Organizador")) {
-            novoUsuario = new Organizador(solicitacao.getNome(), solicitacao.getEmail(), senhaInicial, solicitacao.getDataNascimento());
+            novoUsuario = new Organizador(solicitacao.getNome(), solicitacao.getEmail(), senhaCadastro, solicitacao.getDataNascimento());
         } else {
-            novoUsuario = new ArbitroUser(solicitacao.getNome(), solicitacao.getEmail(), senhaInicial, solicitacao.getDataNascimento());
+            novoUsuario = new ArbitroUser(solicitacao.getNome(), solicitacao.getEmail(), senhaCadastro, solicitacao.getDataNascimento());
         }
 
+
+        novoUsuario.setPrimeiroAcesso(false);
+
+        // grava o novo usuário ativo no repositório/arquivo
         repository.add(novoUsuario);
 
+        // remove a solicitação pendente do arquivo de solicitações
         List<SolicitacaoCadastro> solicitacoes = repository.findAllSolicitacoes();
         solicitacoes.removeIf(s -> s.getEmail().equalsIgnoreCase(solicitacao.getEmail()));
         repository.salvarTodasSolicitacoes(solicitacoes);
 
-        return senhaInicial;
-
+        // retorna a própria senha utilizada para fins de exibição na tela
+        return senhaCadastro;
     }
     public void reprovarSolicitacao(SolicitacaoCadastro solicitacao) {
 
@@ -155,12 +137,15 @@ public class UsuarioService {
     }
 
     public void excluirUsuario(String email) {
-        // Localiza o usuário existente pelo e-mail e remove
+        // localiza o usuário existente pelo email e remove
         java.util.Optional<Usuario> usuarioOpt = repository.findById(email);
         if (usuarioOpt.isPresent()) {
             repository.delete(usuarioOpt.get());
         }
     }
 
+    public List<SolicitacaoCadastro> obterTodasSolicitacoes() {
+        return new UsuarioRepository().findAllSolicitacoes(); // Chama as solicitações pendentes
+    }
 
 }
