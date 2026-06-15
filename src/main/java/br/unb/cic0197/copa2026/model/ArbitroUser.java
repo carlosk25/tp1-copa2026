@@ -11,10 +11,4 @@ public class ArbitroUser extends Usuario {
     public String getTipoPerfil() {
         return "Arbitro";
     }
-
-    @Override
-    public String obterDadosMetricaConsolidada() {
-        // Implementação polimórfica dos detalhes funcionais
-        return "Acesso restrito: Lançamento operacional de chaves, placares e atletas.";
-    }
 }
