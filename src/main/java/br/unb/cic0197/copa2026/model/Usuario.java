@@ -9,14 +9,14 @@ public abstract class Usuario implements Serializable {
     private String email;
     private String senha;
     private String dataNascimento;
-    private boolean primeiroAcesso; // Nova flag para controle de alteração de senha
+    private boolean primeiroAcesso;
 
     public Usuario(String nome, String email, String senha, String dataNascimento) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.dataNascimento = dataNascimento;
-        this.primeiroAcesso = true; // Por padrão, usuários novos começam no primeiro acesso
+        this.primeiroAcesso = true;
     }
 
     public String getNome() { return nome; }
@@ -29,5 +29,5 @@ public abstract class Usuario implements Serializable {
     public void setPrimeiroAcesso(boolean primeiroAcesso) { this.primeiroAcesso = primeiroAcesso; }
 
     public abstract String getTipoPerfil();
-    public abstract String obterDadosMetricaConsolidada();
+
 }
