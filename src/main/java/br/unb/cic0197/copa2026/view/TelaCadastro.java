@@ -1,21 +1,16 @@
 package br.unb.cic0197.copa2026.view;
-    
+
 import br.unb.cic0197.copa2026.app.CopaApp;
-import br.unb.cic0197.copa2026.controller.UsuarioGerenciador;
-import br.unb.cic0197.copa2026.exception.UsuarioJaCadastradoException;
-import br.unb.cic0197.copa2026.model.Administrador;
-import br.unb.cic0197.copa2026.model.Arbitro;
 import br.unb.cic0197.copa2026.model.SolicitacaoCadastro;
-import br.unb.cic0197.copa2026.model.Usuario;
-import br.unb.cic0197.copa2026.service.UsuarioService;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 
 import static br.unb.cic0197.copa2026.controller.UsuarioGerenciador.adicionarSolicitacao;
 
@@ -35,183 +30,156 @@ public class TelaCadastro extends JPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
-        setBackground(new Color(240, 248, 255));
+        setBackground(new Color(245, 245, 245));
 
-        // Painel central com formulário
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBackground(new Color(240, 248, 255));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+        // cabeçalho
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(25, 118, 210));
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+
+        JLabel lblTitulo = new JLabel("Solicitação de Novo Cadastro");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitulo.setForeground(Color.WHITE);
+
+        JLabel lblSubtitulo = new JLabel("Preencha as informações. Sua conta passará pela triagem de um administrador.");
+        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        lblSubtitulo.setForeground(new Color(220, 230, 242));
+
+        headerPanel.add(lblTitulo);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 4)));
+        headerPanel.add(lblSubtitulo);
+        add(headerPanel, BorderLayout.NORTH);
+
+
+        JPanel mainContentPanel = new JPanel(new BorderLayout());
+        mainContentPanel.setBackground(new Color(245, 245, 245));
+        mainContentPanel.setBorder(new EmptyBorder(15, 20, 15, 20));
+
+        JPanel containerBranco = new JPanel(new GridBagLayout());
+        containerBranco.setBackground(Color.WHITE);
+        containerBranco.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(new Color(225, 225, 225), 1),
+                new EmptyBorder(20, 35, 20, 35)
+        ));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 10, 8, 10);
+        gbc.insets = new Insets(6, 10, 6, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Título
-        JLabel titleLabel = new JLabel("Copa 2026 - Cadastro de Usuário");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
-        titleLabel.setForeground(new Color(0, 100, 0));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        formPanel.add(titleLabel, gbc);
 
-        // Espaço entre título e campos
-        gbc.gridy = 1;
-        formPanel.add(Box.createVerticalStrut(10), gbc);
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
+        LineBorder fieldBorder = new LineBorder(new Color(210, 210, 210));
+        EmptyBorder paddingBorder = new EmptyBorder(5, 8, 5, 8);
 
-        // Nome Completo
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.gridy = 2;
-        gbc.gridx = 0;
+        // nome
+        gbc.gridx = 0; gbc.gridy = 0;
         JLabel nomeLabel = new JLabel("Nome Completo:");
-        nomeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        formPanel.add(nomeLabel, gbc);
+        nomeLabel.setFont(labelFont);
+        containerBranco.add(nomeLabel, gbc);
 
-        nomeField = new JTextField(25);
-        nomeField.setFont(new Font("Arial", Font.PLAIN, 14));
-        nomeField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(nomeField, gbc);
+        nomeField = new JTextField(22);
+        nomeField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        nomeField.setBorder(BorderFactory.createCompoundBorder(fieldBorder, paddingBorder));
+        containerBranco.add(nomeField, gbc);
 
-        // Data de Nascimento
-        gbc.gridy = 3;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        JLabel dataLabel = new JLabel("Data de Nascimento:");
-        dataLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        formPanel.add(dataLabel, gbc);
+        // data de nascimento
+        gbc.gridx = 0; gbc.gridy = 1;
+        JLabel dataLabel = new JLabel("Data de Nascimento (DD/MM/AAAA):");
+        dataLabel.setFont(labelFont);
+        containerBranco.add(dataLabel, gbc);
 
-        dataNascimentoField = new JTextField(25);
-        dataNascimentoField.setFont(new Font("Arial", Font.PLAIN, 14));
-        dataNascimentoField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(dataNascimentoField, gbc);
+        dataNascimentoField = new JTextField(22);
+        dataNascimentoField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        dataNascimentoField.setBorder(BorderFactory.createCompoundBorder(fieldBorder, paddingBorder));
+        containerBranco.add(dataNascimentoField, gbc);
 
-        // E-mail
-        gbc.gridy = 4;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        JLabel emailLabel = new JLabel("E-mail:");
-        emailLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        formPanel.add(emailLabel, gbc);
+        // email
+        gbc.gridx = 0; gbc.gridy = 2;
+        JLabel emailLabel = new JLabel("E-mail Válido:");
+        emailLabel.setFont(labelFont);
+        containerBranco.add(emailLabel, gbc);
 
-        emailField = new JTextField(25);
-        emailField.setFont(new Font("Arial", Font.PLAIN, 14));
-        emailField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(emailField, gbc);
+        emailField = new JTextField(22);
+        emailField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        emailField.setBorder(BorderFactory.createCompoundBorder(fieldBorder, paddingBorder));
+        containerBranco.add(emailField, gbc);
 
-
-
-        gbc.gridy = 5;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.EAST;
+        // senha
+        gbc.gridx = 0; gbc.gridy = 3;
         JLabel senhaLabel = new JLabel("Senha:");
-        senhaLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        formPanel.add(senhaLabel, gbc);
+        senhaLabel.setFont(labelFont);
+        containerBranco.add(senhaLabel, gbc);
 
-        senhaField = new JPasswordField(25);
-        senhaField.setFont(new Font("Arial", Font.PLAIN, 14));
-        senhaField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(senhaField, gbc);
+        senhaField = new JPasswordField(22);
+        senhaField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        senhaField.setBorder(BorderFactory.createCompoundBorder(fieldBorder, paddingBorder));
+        containerBranco.add(senhaField, gbc);
 
-        // Confirmar Senha
-        gbc.gridy = 6;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.EAST;
+        // confirmar senha
+        gbc.gridx = 0; gbc.gridy = 4;
         JLabel confirmarLabel = new JLabel("Confirmar Senha:");
-        confirmarLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        formPanel.add(confirmarLabel, gbc);
+        confirmarLabel.setFont(labelFont);
+        containerBranco.add(confirmarLabel, gbc);
 
-        confirmarSenhaField = new JPasswordField(25);
-        confirmarSenhaField.setFont(new Font("Arial", Font.PLAIN, 14));
-        confirmarSenhaField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(confirmarSenhaField, gbc);
+        confirmarSenhaField = new JPasswordField(22);
 
-        // Tipo de Acesso
-        gbc.gridy = 7;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        JLabel tipoLabel = new JLabel("Tipo de Acesso:");
-        tipoLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        formPanel.add(tipoLabel, gbc);
+        confirmarSenhaField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        confirmarSenhaField.setBorder(BorderFactory.createCompoundBorder(fieldBorder, paddingBorder));
+        containerBranco.add(confirmarSenhaField, gbc);
 
+        // tipo de acesso
+        gbc.gridx = 0; gbc.gridy = 5;
+        JLabel tipoLabel = new JLabel("Perfil Solicitado:");
+        tipoLabel.setFont(labelFont);
+        containerBranco.add(tipoLabel, gbc);
+
+        gbc.gridx = 1;
         String[] tipos = {"Administrador", "Árbitro", "Organizador"};
         tipoAcessoCombo = new JComboBox<>(tipos);
-        tipoAcessoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+        tipoAcessoCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         tipoAcessoCombo.setBackground(Color.WHITE);
-        tipoAcessoCombo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(tipoAcessoCombo, gbc);
+        tipoAcessoCombo.setBorder(BorderFactory.createCompoundBorder(fieldBorder, new EmptyBorder(2, 2, 2, 2)));
+        containerBranco.add(tipoAcessoCombo, gbc);
 
-        // Botões
-        gbc.gridy = 8;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
+        // botao de ações
+        gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        buttonPanel.setBackground(Color.WHITE);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        buttonPanel.setBackground(new Color(240, 248, 255));
+        JButton voltarBtn = createStyledButton("Voltar ao Login", new Color(52, 152, 219));
+        JButton cadastrarBtn = createStyledButton("Enviar Solicitação", new Color(46, 204, 113));
 
-        JButton voltarBtn = createStyledButton("← Voltar", new Color(100, 100, 100));
-        JButton cadastrarBtn = createStyledButton("Solicitar Cadastro", new Color(0, 150, 0));
-
-        voltarBtn.addActionListener(e -> app.mostrarTela("login"));
+        voltarBtn.addActionListener(e -> { limparCampos(); app.mostrarTela("login"); });
         cadastrarBtn.addActionListener(e -> finalizarCadastro());
 
         buttonPanel.add(voltarBtn);
         buttonPanel.add(cadastrarBtn);
+        containerBranco.add(buttonPanel, gbc);
 
-        formPanel.add(buttonPanel, gbc);
+        mainContentPanel.add(containerBranco, BorderLayout.CENTER);
+        add(mainContentPanel, BorderLayout.CENTER);
 
-        add(formPanel, BorderLayout.CENTER);
-
-        JLabel footerLabel = new JLabel("© 2026 Copa do Mundo - Todos os direitos reservados", JLabel.CENTER);
-        footerLabel.setFont(new Font("Arial", Font.PLAIN, 10));
-        footerLabel.setForeground(Color.GRAY);
-        add(footerLabel, BorderLayout.SOUTH);
     }
 
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text);
         button.setBackground(bgColor);
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
         button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return button;
     }
 
 
-    private void finalizarCadastro() { 
+    private void finalizarCadastro() {
         String nome = nomeField.getText().trim();
         String email = emailField.getText().trim();
         String dataNasc = dataNascimentoField.getText().trim();
@@ -220,42 +188,15 @@ public class TelaCadastro extends JPanel {
         String senha = new String(senhaField.getPassword());
         String confirmarSenha = new String(confirmarSenhaField.getPassword());
 
-    
         if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty() || dataNasc.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos obrigatórios!", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-       
-        String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        if (!java.util.regex.Pattern.matches(regexEmail, email)) {
-            JOptionPane.showMessageDialog(this, "Por favor, insira um e-mail com estrutura válida!\nExemplo: usuario@email.com", "E-mail Inválido", JOptionPane.WARNING_MESSAGE);
+        if (!validarCamposCadastro(email, dataNasc)) {
             return;
         }
 
-        
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        java.time.LocalDate dataNascimentoValida;
-        try {
-            dataNascimentoValida = java.time.LocalDate.parse(dataNasc, formatter);
-        } catch (java.time.format.DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "A data de nascimento deve estar no formato correto: DD/MM/AAAA", "Data Inválida", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        java.time.LocalDate dataAtual = java.time.LocalDate.now();
-        if (dataNascimentoValida.isAfter(dataAtual)) {
-            JOptionPane.showMessageDialog(this, "A data de nascimento não pode ser uma data futura!", "Data Inválida", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        int idade = java.time.Period.between(dataNascimentoValida, dataAtual).getYears();
-        if (idade < 18) {
-            JOptionPane.showMessageDialog(this, "Cadastro não permitido: O usuário deve ter pelo menos 18 anos de idade.", "Menor de Idade", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        
         if (!senha.equals(confirmarSenha)) {
             JOptionPane.showMessageDialog(this, "As senhas digitadas não coincidem! Tente novamente.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
             senhaField.setText("");
@@ -269,52 +210,35 @@ public class TelaCadastro extends JPanel {
         }
 
         try {
-            
             SolicitacaoCadastro novaSolicitacao = new SolicitacaoCadastro(nome, email, senha, dataNasc, tipoPerfil);
-
-            // Envia para o gerenciador salvar no txt
             adicionarSolicitacao(novaSolicitacao);
 
             JOptionPane.showMessageDialog(this, "Solicitação de cadastro enviada! Aguarde a aprovação de um Administrador.");
-
-            // Limpa os campos após o sucesso
-            nomeField.setText("");
-            emailField.setText("");
-            dataNascimentoField.setText("");
-            senhaField.setText("");
-            confirmarSenhaField.setText("");
-
-            // Volta para a tela de login
+            limparCampos();
             app.mostrarTela("login");
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao processar solicitação: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private boolean validarCamposCadastro (String email, String dataNascimento) {
-        // validaçao email
         String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         if (!Pattern.matches(regexEmail, email)) {
-            JOptionPane.showMessageDialog(this,
-                    "Por favor, insira um e-mail com estrutura válida!\nExemplo: usuario@email.com",
-                    "E-mail Inválido", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, insira um e-mail com estrutura válida!\nExemplo: usuario@email.com", "E-mail Inválido", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        // validação data (Espera dd/MM/yyyy)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataNasc;
         try {
             dataNasc = LocalDate.parse(dataNascimento, formatter);
         } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this,
-                    "A data de nascimento deve estar no formato correto: DD/MM/AAAA",
-                    "Data Inválida", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "A data de nascimento deve estar no formato correto: DD/MM/AAAA", "Data Inválida", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        // maioridade (Mínimo 18 anos em relação ao ano atual de 2026)
-        LocalDate dataAtual = LocalDate.now(); 
+        LocalDate dataAtual = LocalDate.now();
         if (dataNasc.isAfter(dataAtual)) {
             JOptionPane.showMessageDialog(this, "A data de nascimento não pode ser uma data futura!", "Data Inválida", JOptionPane.WARNING_MESSAGE);
             return false;
@@ -322,14 +246,12 @@ public class TelaCadastro extends JPanel {
 
         int idade = Period.between(dataNasc, dataAtual).getYears();
         if (idade < 18) {
-            JOptionPane.showMessageDialog(this,
-                    "Cadastro não permitido: O usuário deve ter pelo menos 18 anos de idade.",
-                    "Menor de Idade", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cadastro não permitido: O usuário deve ter pelo menos 18 anos de idade.", "Menor de Idade", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-
         return true;
     }
+
     private void limparCampos() {
         nomeField.setText("");
         dataNascimentoField.setText("");
