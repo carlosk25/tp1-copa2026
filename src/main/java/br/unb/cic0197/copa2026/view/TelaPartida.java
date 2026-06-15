@@ -620,7 +620,7 @@ public class TelaPartida extends JPanel {
                 JOptionPane.showMessageDialog(this, "Partida atualizada com sucesso!", "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
             }
-
+            app.recarregarPartidas();
             atualizarTabela(partidaController.listarPartidas());
             limparCampos();
         } catch (Copa2026Exception ex) {
@@ -640,6 +640,7 @@ public class TelaPartida extends JPanel {
         if (confirm == JOptionPane.YES_OPTION) {
             try {
                 partidaController.removerPartida(partidaSelecionada);
+                app.recarregarPartidas();
                 atualizarTabela(partidaController.listarPartidas());
                 limparCampos();
                 JOptionPane.showMessageDialog(this, "Partida excluída.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
