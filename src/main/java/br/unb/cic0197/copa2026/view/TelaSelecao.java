@@ -289,7 +289,7 @@ public class TelaSelecao extends JPanel {
                         "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
             }
-            app.recarregarPartidas();
+            app.recarregarSelecoes();
             atualizarTabela(selecaoController.listarSelecoes());
             limparCampos();
 
@@ -320,7 +320,7 @@ public class TelaSelecao extends JPanel {
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
                 selecaoController.removerSelecao(selecaoSelecionada);
-                app.recarregarPartidas();
+                app.recarregarSelecoes();
                 atualizarTabela(selecaoController.listarSelecoes());
                 limparCampos();
                 JOptionPane.showMessageDialog(this,
