@@ -12,6 +12,8 @@ import br.unb.cic0197.copa2026.repository.EstadioRepository;
 import br.unb.cic0197.copa2026.repository.JogadorRepository;
 import br.unb.cic0197.copa2026.repository.PartidaRepository;
 import br.unb.cic0197.copa2026.repository.SelecaoRepository;
+import br.unb.cic0197.copa2026.service.PartidaService;
+import br.unb.cic0197.copa2026.service.SelecaoService;
 import br.unb.cic0197.copa2026.view.*;
 import javax.swing.*;
 import java.awt.*;
