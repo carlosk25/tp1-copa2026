@@ -242,4 +242,18 @@ public class CopaApp extends JFrame {
         return null;
     }
 
+public void recarregarSelecoes() {
+   
+    SelecaoService service = new SelecaoService();
+    
+    this.selecoes = service.obterTodas(); 
+}
+
+public void recarregarPartidas() {
+   
+    PartidaService service = new PartidaService();
+    
+    this.partidas = service.obterTodas(); 
+}
+
 }
