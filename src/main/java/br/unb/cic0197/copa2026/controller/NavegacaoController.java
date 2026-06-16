@@ -1,3 +1,4 @@
+/*
 package br.unb.cic0197.copa2026.controller;
 
 import br.unb.cic0197.copa2026.app.CopaApp;
@@ -56,3 +57,4 @@ public class NavegacaoController {
     }
 
 }
+*/
