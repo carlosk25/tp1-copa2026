@@ -20,14 +20,14 @@ public class UsuarioService {
     }
 
     private void inicializarAdminPadrao() {
-        String emailAdmin = "admin@copa.com";
+        String emailAdmin = "master@copa.com";
 
         if (!repository.findById(emailAdmin).isPresent()) {
             // Cria o administrador usando o construtor correto de 4 argumentos
             Administrador adminPadrao = new Administrador(
                     "Administrador Geral",
                     emailAdmin,
-                    "admin12",
+                    "admin123",
                     "01/01/1990"
             );
 
@@ -50,7 +50,7 @@ public class UsuarioService {
             if (!existente.isPresent()) {
                 repository.add(usuario);
             } else {
-                repository.update(usuario);
+                repository.update(usuario.getEmail(), usuario);
             }
         }
     }
@@ -84,11 +84,6 @@ public class UsuarioService {
         // pega a senha real definida pelo usuário no momento do cadastro
         String senhaCadastro = solicitacao.getSenha();
 
-        // garantia de segurança caso o campo tenha vindo vazio por algum motivo
-        if (senhaCadastro == null || senhaCadastro.isEmpty()) {
-            senhaCadastro = "12345";
-        }
-
         Usuario novoUsuario;
         if (solicitacao.getTipoPerfilSolicitado().equalsIgnoreCase("Administrador")) {
             novoUsuario = new Administrador(solicitacao.getNome(), solicitacao.getEmail(), senhaCadastro, solicitacao.getDataNascimento());
@@ -120,20 +115,20 @@ public class UsuarioService {
 
         repository.salvarTodasSolicitacoes(solicitacoes);
     }
-  
-    public void editarUsuario(String nome, String email, String senha, String dataNascimento, boolean primeiroAcesso, String tipoPerfil) {
+
+    public void editarUsuario(String nome, String emailOriginal, String emailNovo, String senha, String dataNascimento, boolean primeiroAcesso, String tipoPerfil) {
         Usuario usuarioAtualizado;
 
         if (tipoPerfil.equalsIgnoreCase("Administrador")) {
-            usuarioAtualizado = new Administrador(nome, email, senha, dataNascimento);
+            usuarioAtualizado = new Administrador(nome, emailNovo, senha, dataNascimento);
         } else if (tipoPerfil.equalsIgnoreCase("Organizador")) {
-            usuarioAtualizado = new Organizador(nome, email, senha, dataNascimento);
+            usuarioAtualizado = new Organizador(nome, emailNovo, senha, dataNascimento);
         } else {
-            usuarioAtualizado = new ArbitroUser(nome, email, senha, dataNascimento);
+            usuarioAtualizado = new ArbitroUser(nome, emailNovo, senha, dataNascimento);
         }
 
         usuarioAtualizado.setPrimeiroAcesso(primeiroAcesso);
-        repository.update(usuarioAtualizado);
+        repository.update(emailOriginal, usuarioAtualizado);
     }
 
     public void excluirUsuario(String email) {
