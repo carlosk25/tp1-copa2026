@@ -1,2 +1,3 @@
 Administrador Geral|master@copa.com|admin123|01/01/1990|false|Administrador
 Daniel Jorge|daniel@gmail.com|Daniel123@|01/01/2000|false|Organizador
+João pedro|joao@gmail.com|@1234567|20/06/2000|false|Arbitro

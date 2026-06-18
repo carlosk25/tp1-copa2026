@@ -28,13 +28,15 @@ public class TelaSelecao extends JPanel {
     private JTable table;
 
     private static final String[] GRUPOS = {
-            "Grupo 1", "Grupo 2", "Grupo 3", "Grupo 4",
-            "Grupo 5", "Grupo 6", "Grupo 7", "Grupo 8"
+            "Grupo A", "Grupo B", "Grupo C", "Grupo D",
+            "Grupo E", "Grupo F", "Grupo G", "Grupo H",
+            "Grupo I", "Grupo J", "Grupo K", "Grupo L"
     };
 
     private static final String[] GRUPOS_FILTRO = {
-            "Todos", "Grupo 1", "Grupo 2", "Grupo 3", "Grupo 4",
-            "Grupo 5", "Grupo 6", "Grupo 7", "Grupo 8"
+            "Todos", "Grupo A", "Grupo B", "Grupo C", "Grupo D",
+            "Grupo E", "Grupo F", "Grupo G", "Grupo H",
+            "Grupo I", "Grupo J", "Grupo K", "Grupo L"
     };
 
     public TelaSelecao(CopaApp app) {
@@ -91,9 +93,7 @@ public class TelaSelecao extends JPanel {
         container.setBorder(
                 BorderFactory.createTitledBorder(
                         BorderFactory.createLineBorder(new Color(220, 220, 220)),
-                        "Cadastro / Edição de Seleção"
-                )
-        );
+                        "Cadastro / Edição de Seleção"));
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setOpaque(false);
@@ -173,9 +173,7 @@ public class TelaSelecao extends JPanel {
         panel.setBorder(
                 BorderFactory.createTitledBorder(
                         BorderFactory.createLineBorder(new Color(220, 220, 220)),
-                        "Filtro de Seleções"
-                )
-        );
+                        "Filtro de Seleções"));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -220,14 +218,11 @@ public class TelaSelecao extends JPanel {
         panel.setBorder(
                 BorderFactory.createTitledBorder(
                         BorderFactory.createLineBorder(new Color(220, 220, 220)),
-                        "Seleções Cadastradas"
-                )
-        );
+                        "Seleções Cadastradas"));
 
         tableModel = new DefaultTableModel(
-                new Object[]{"ID", "País", "Grupo", "Técnico"},
-                0
-        );
+                new Object[] { "ID", "País", "Grupo", "Técnico" },
+                0);
 
         table = new JTable(tableModel) {
             @Override
@@ -280,8 +275,7 @@ public class TelaSelecao extends JPanel {
                         selecaoSelecionada.getId(),
                         pais,
                         grupo,
-                        tecnico
-                );
+                        tecnico);
                 selecaoEditada.setJogadores(selecaoSelecionada.getJogadores());
                 selecaoController.atualizarSelecao(selecaoEditada);
                 JOptionPane.showMessageDialog(this,
@@ -314,8 +308,7 @@ public class TelaSelecao extends JPanel {
                 this,
                 "Deseja realmente excluir a seleção selecionada?",
                 "Confirmar exclusão",
-                JOptionPane.YES_NO_OPTION
-        );
+                JOptionPane.YES_NO_OPTION);
 
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
@@ -383,12 +376,11 @@ public class TelaSelecao extends JPanel {
         List<Selecao> ordenadas = new ArrayList<>(selecoes);
         ordenadas.sort(
                 Comparator.comparing(Selecao::getGrupo)
-                        .thenComparing(Selecao::getPais, String.CASE_INSENSITIVE_ORDER)
-        );
+                        .thenComparing(Selecao::getPais, String.CASE_INSENSITIVE_ORDER));
 
         tableModel.setRowCount(0);
         for (Selecao selecao : ordenadas) {
-            tableModel.addRow(new Object[]{
+            tableModel.addRow(new Object[] {
                     selecao.getId(),
                     selecao.getPais(),
                     selecao.getGrupo(),
