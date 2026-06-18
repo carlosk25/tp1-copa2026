@@ -333,12 +333,20 @@ public class TelaGestaoDeUsuarios extends JPanel {
             return;
         }
 
+
         int linha = tabelaUsuariosAtivos.convertRowIndexToModel(linhaVisivel);
 
         String emailAtual = (String) modeloUsuariosAtivos.getValueAt(linha, 1);
         String nomeAtual = (String) modeloUsuariosAtivos.getValueAt(linha, 0);
         String dataAtual = (String) modeloUsuariosAtivos.getValueAt(linha, 2);
         String perfilAtual = (String) modeloUsuariosAtivos.getValueAt(linha, 3);
+
+
+        // impedir alteração do Administrador Master
+        if (emailAtual.equalsIgnoreCase("master@copa.com")) {
+            JOptionPane.showMessageDialog(this, "O perfil do Administrador Master não pode ser editado.", "Acesso Negado", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         JTextField txtNome = new JTextField(nomeAtual);
         JTextField txtEmail = new JTextField(emailAtual);
@@ -351,33 +359,86 @@ public class TelaGestaoDeUsuarios extends JPanel {
                 "Nome:", txtNome,
                 "E-mail:", txtEmail,
                 "Data Nascimento:", txtData,
-                "Nova Senha (deixe em branco para não alterar):", txtSenha,
+                "Nova Senha (deixe em branco para manter a atual):", txtSenha,
                 "Perfil:", comboPerfil
         };
 
         int result = JOptionPane.showConfirmDialog(this, formulario, "Editar Usuário", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
             try {
+
+                String novoNome = txtNome.getText().trim();
+                String novoEmail = txtEmail.getText().trim();
+                String novaDataNascimento = txtData.getText().trim();
                 String novaSenha = new String(txtSenha.getPassword()).trim();
                 String novoPerfilSelecionado = (String) comboPerfil.getSelectedItem();
 
-                br.unb.cic0197.copa2026.controller.UsuarioGerenciador.editarUsuario(
+                // validação email
+                String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+                if (!java.util.regex.Pattern.matches(regexEmail, novoEmail)) {
+                    JOptionPane.showMessageDialog(this, "Por favor, insira um e-mail com estrutura válida!\nExemplo: usuario@email.com", "E-mail Inválido", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // validaçao ou recuperação de senha
+                if (!novaSenha.isEmpty()) {
+                    String regexSenha = "^(?=.*[!@#$%^&*(),.?\":{}|<>_\\-+=\\[\\]\\\\/~`;]).{8,}$";
+                    if (!java.util.regex.Pattern.matches(regexSenha, novaSenha)) {
+                        JOptionPane.showMessageDialog(this, "A nova senha deve conter no mínimo 8 dígitos e pelo menos um caractere especial.", "Senha Fraca", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } else {
+                    // recupera a senha original se o campo foi deixado em branco
+                    br.unb.cic0197.copa2026.repository.UsuarioRepository repo = new br.unb.cic0197.copa2026.repository.UsuarioRepository();
+                    java.util.Optional<Usuario> userOpt = repo.findById(emailAtual);
+                    if (userOpt.isPresent()) {
+                        novaSenha = userOpt.get().getSenha();
+                    } else {
+                        novaSenha = "12345";
+                    }
+                }
+
+                // 3. Validação do Escopo de Data
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                java.time.LocalDate dataNasc = null;
+
+                try {
+                    dataNasc = java.time.LocalDate.parse(novaDataNascimento, formatter);
+                } catch (java.time.format.DateTimeParseException e) {
+                    JOptionPane.showMessageDialog(this, "A data de nascimento deve estar no formato correto: DD/MM/AAAA", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                java.time.LocalDate dataAtualObjeto = java.time.LocalDate.now();
+                if (dataNasc.isAfter(dataAtualObjeto)) {
+                    JOptionPane.showMessageDialog(this, "A data de nascimento não pode ser uma data futura!", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                int idade = java.time.Period.between(dataNasc, dataAtualObjeto).getYears();
+                if (idade < 18) {
+                    JOptionPane.showMessageDialog(this, "Modificação inválida: O usuário deve ter pelo menos 18 anos de idade.", "Menor de Idade", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // 4. Execução da Atualização passando as variáveis validadas
+                UsuarioGerenciador.editarUsuario(
                         emailAtual,
-                        txtNome.getText().trim(),
-                        txtEmail.getText().trim(),
-                        txtData.getText().trim(),
-                        novaSenha.isEmpty() ? "12345" : novaSenha,
+                        novoNome,
+                        novoEmail,
+                        novaDataNascimento,
+                        novaSenha,
                         novoPerfilSelecionado
                 );
 
-                JOptionPane.showMessageDialog(this, "Dados do usuário updated com sucesso!");
+                JOptionPane.showMessageDialog(this, "Dados do usuário atualizados com sucesso!");
                 atualizarTela();
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Falha na sincronização: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-
     //executa uma exclusao de solicitaçao
     private void executarExclusao() {
         int linhaVisivel = tabelaUsuariosAtivos.getSelectedRow();
@@ -386,16 +447,15 @@ public class TelaGestaoDeUsuarios extends JPanel {
             return;
         }
 
-        int línea = tabelaUsuariosAtivos.convertRowIndexToModel(linhaVisivel);
+        int linha = tabelaUsuariosAtivos.convertRowIndexToModel(linhaVisivel);
+        String email = (String) modeloUsuariosAtivos.getValueAt(linha, 1);
 
-        String perfilSelecionado = (String) modeloUsuariosAtivos.getValueAt(línea, 3);
-
-        if (perfilSelecionado.equalsIgnoreCase("Administrador")) {
-            JOptionPane.showMessageDialog(this, "Erro: Não é permitido excluir um usuário com perfil Administrador!", "Acesso Negado", JOptionPane.ERROR_MESSAGE);
+        if (email.equalsIgnoreCase("master@copa.com")) {
+            JOptionPane.showMessageDialog(this, "Erro: O perfil do Administrador Master não pode ser excluído!", "Acesso Negado", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        String email = (String) modeloUsuariosAtivos.getValueAt(línea, 1);
+
         int certeza = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o usuário: " + email + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
 
         if (certeza == JOptionPane.YES_OPTION) {
