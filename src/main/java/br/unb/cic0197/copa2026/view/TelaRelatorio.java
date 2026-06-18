@@ -149,6 +149,13 @@ public class TelaRelatorio extends JPanel {
 
         mainContentPanel.add(cardDesempenho);
         add(mainContentPanel, BorderLayout.CENTER);
+
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                atualizarTela();
+            }
+        });
     }
 
 
