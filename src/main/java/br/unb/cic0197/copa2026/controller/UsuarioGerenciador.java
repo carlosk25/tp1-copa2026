@@ -6,11 +6,9 @@ import br.unb.cic0197.copa2026.service.UsuarioService;
 import java.util.List;
 import br.unb.cic0197.copa2026.exception.UsuarioInvalidoException;
 
-
-public class    UsuarioGerenciador {
+public class UsuarioGerenciador {
 
     private static final UsuarioService usuarioService = new UsuarioService();
-
 
     public static List<SolicitacaoCadastro> listarSolicitacoes() {
         return usuarioService.obterTodasSolicitacoes();
@@ -24,15 +22,14 @@ public class    UsuarioGerenciador {
         return usuarioService.autenticar(email, senha);
     }
 
-
-    public static void editarUsuario(String emailOriginal, String nome, String emailNovo, String dataNascimento, String senha, String tipoPerfil) {
+    public static void editarUsuario(String emailOriginal, String nome, String emailNovo, String dataNascimento,
+            String senha, String tipoPerfil) {
         usuarioService.editarUsuario(nome, emailOriginal, emailNovo, senha, dataNascimento, false, tipoPerfil);
     }
 
     public static void excluirUsuario(String email) {
         usuarioService.excluirUsuario(email);
     }
-
 
     public static List<SolicitacaoCadastro> obterTodasSolicitacoes() {
         return usuarioService.obterTodasSolicitacoes();
@@ -42,7 +39,8 @@ public class    UsuarioGerenciador {
         return usuarioService.obtertodas();
     }
 
-    public static void adicionarSolicitacao(br.unb.cic0197.copa2026.model.SolicitacaoCadastro novaSolicitacao) throws Exception {
+    public static void adicionarSolicitacao(br.unb.cic0197.copa2026.model.SolicitacaoCadastro novaSolicitacao)
+            throws Exception {
 
         usuarioService.cadastrarSolicitacao(novaSolicitacao);
     }
@@ -52,4 +50,4 @@ public class    UsuarioGerenciador {
         usuarioService.reprovarSolicitacao(solicitacao);
     }
 
-
+}
