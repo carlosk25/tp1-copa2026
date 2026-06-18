@@ -185,15 +185,15 @@ public class TelaCadastro extends JPanel {
         String dataNasc = dataNascimentoField.getText().trim();
         String tipoPerfil = (String) tipoAcessoCombo.getSelectedItem();
 
-        String senha = new String(senhaField.getPassword());
-        String confirmarSenha = new String(confirmarSenhaField.getPassword());
+        String senha = new String(senhaField.getPassword()).trim();
+        String confirmarSenha = new String(confirmarSenhaField.getPassword()).trim();
 
         if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty() || dataNasc.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos obrigatórios!", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        if (!validarCamposCadastro(email, dataNasc)) {
+        if (!validarCamposCadastro(email, dataNasc, senha)) {
             return;
         }
 
@@ -222,10 +222,20 @@ public class TelaCadastro extends JPanel {
         }
     }
 
-    private boolean validarCamposCadastro (String email, String dataNascimento) {
+    private boolean validarCamposCadastro (String email, String dataNascimento,String senha) {
         String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         if (!Pattern.matches(regexEmail, email)) {
             JOptionPane.showMessageDialog(this, "Por favor, insira um e-mail com estrutura válida!\nExemplo: usuario@email.com", "E-mail Inválido", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        //minimo 1 caracter especial
+        String regexSenha = "^(?=.*[!@#$%^&*(),.?\":{}|<>_\\-+=\\[\\]\\\\/~`;]).{8,}$";
+        if (!Pattern.matches(regexSenha, senha)) {
+            JOptionPane.showMessageDialog(this,
+                    "A senha deve conter no mínimo 8 dígitos e pelo menos um caractere especial (ex: @, #, $, %, !, etc.).",
+                    "Senha Fraca",
+                    JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
@@ -261,3 +271,4 @@ public class TelaCadastro extends JPanel {
         tipoAcessoCombo.setSelectedIndex(0);
     }
 }
+
