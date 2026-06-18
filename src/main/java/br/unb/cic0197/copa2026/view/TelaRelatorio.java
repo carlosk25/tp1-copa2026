@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+// tela que mostra indicadores e desempenho das seleções.
 public class TelaRelatorio extends JPanel {
     private CopaApp app;
 
@@ -32,6 +33,7 @@ public class TelaRelatorio extends JPanel {
         initComponents();
     }
 
+    // monta os cards de métricas e a tabela de desempenho.
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 245));
@@ -110,7 +112,7 @@ public class TelaRelatorio extends JPanel {
         JPanel cardDesempenho = criarCardBranco("Classificação e Rendimento Técnico das Seleções");
         cardDesempenho.setLayout(new BorderLayout(10, 10));
 
-        // Barra de Filtros
+        // barra de filtros
         JPanel painelFiltroEstiloSite = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         painelFiltroEstiloSite.setBackground(Color.WHITE);
         painelFiltroEstiloSite.add(new JLabel("Ordenar Tabela por:"));
@@ -123,7 +125,7 @@ public class TelaRelatorio extends JPanel {
 
         cardDesempenho.add(painelFiltroEstiloSite, BorderLayout.NORTH);
 
-        // Tabela de Dados
+        // tabela de dados
         String[] colunas = {"Colocação", "Seleção/País", "Pontos (Fase de Grupos)", "Gols Marcados"};
         modeloDesempenho = new DefaultTableModel(colunas, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
@@ -159,6 +161,7 @@ public class TelaRelatorio extends JPanel {
     }
 
 
+    // atualiza os dados quando a tela é aberta novamente.
     public void atualizarTela() {
         lblPartidasGerais.setText(String.valueOf(app.getPartidas().size()));
         txtPesquisaSelecaoPartida.setText("");
@@ -167,6 +170,7 @@ public class TelaRelatorio extends JPanel {
         processarEAtualizarDados();
     }
 
+    // calcula pontos e gols para montar a tabela de classificação.
     private void processarEAtualizarDados() {
         List<Selecao> listaSelecoes = app.getSelecoes();
 
@@ -241,6 +245,7 @@ public class TelaRelatorio extends JPanel {
         }
     }
 
+    // conta quantas partidas envolvem a seleção pesquisada.
     private void calcularPartidasEspecificas() {
         String busca = txtPesquisaSelecaoPartida.getText().trim();
         if (busca.isEmpty()) {
@@ -259,6 +264,7 @@ public class TelaRelatorio extends JPanel {
 
 
 
+    // cria um card branco para manter o padrão visual da tela.
     private JPanel criarCardBranco(String tituloCard) {
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
@@ -282,6 +288,7 @@ public class TelaRelatorio extends JPanel {
         return button;
     }
     //desempenho na tabela
+    // estrutura auxiliar usada apenas para ordenar os dados do relatório.
     private static class LinhaDesempenho {
         String pais;
         int pontos = 0;

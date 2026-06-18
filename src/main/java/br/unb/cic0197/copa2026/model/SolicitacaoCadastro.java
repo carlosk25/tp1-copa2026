@@ -2,6 +2,7 @@ package br.unb.cic0197.copa2026.model;
 
 import java.io.Serializable;
 
+// representa um pedido de criação de conta antes de virar usuário definitivo.
 public class SolicitacaoCadastro implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -11,6 +12,7 @@ public class SolicitacaoCadastro implements Serializable {
     private String tipoPerfilSolicitado;
     private String senha;
 
+    // guarda os dados enviados na tela de cadastro.
     public SolicitacaoCadastro(String nome, String email, String senha, String dataNascimento, String tipoPerfilSolicitado) {
         this.nome = nome;
         this.email = email;

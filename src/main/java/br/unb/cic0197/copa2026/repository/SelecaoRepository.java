@@ -7,10 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * repositório responsável por persistir e recuperar seleções no arquivo selecoes.txt.
+ * formato de cada linha: id;pais;grupo;tecnico.
+ */
 public class SelecaoRepository {
 
+    // arquivo texto usado como armazenamento simples das seleções.
     private static final String ARQUIVO = "selecoes.txt";
 
+    // carrega todas as seleções cadastradas no arquivo.
     public List<Selecao> findAll() {
         try {
             return carregar();
@@ -19,6 +25,7 @@ public class SelecaoRepository {
         }
     }
 
+    // adiciona uma nova seleção preservando as seleções já cadastradas.
     public void add(Selecao selecao) {
         try {
             List<Selecao> selecoes = carregar();
@@ -29,6 +36,7 @@ public class SelecaoRepository {
         }
     }
 
+    // atualiza a seleção pelo ID, mantendo o mesmo registro lógico.
     public void update(Selecao selecao) {
         try {
             List<Selecao> selecoes = carregar();
@@ -46,6 +54,7 @@ public class SelecaoRepository {
         }
     }
 
+    // remove a seleção pelo ID e regrava o arquivo.
     public void delete(Selecao selecao) {
         try {
             List<Selecao> selecoes = carregar();
@@ -67,6 +76,7 @@ public class SelecaoRepository {
         }
     }
 
+    // filtra seleções por grupo. Quando o grupo vem vazio, retorna todas.
     public List<Selecao> search(String grupo) {
         List<Selecao> resultado = new ArrayList<>();
 
@@ -80,6 +90,7 @@ public class SelecaoRepository {
         return resultado;
     }
 
+    // busca usada para associar partidas/jogadores pelo nome do país.
     public Optional<Selecao> findByPais(String pais) {
         return findAll()
                 .stream()
@@ -87,6 +98,7 @@ public class SelecaoRepository {
                 .findFirst();
     }
 
+    // regrava todo o arquivo selecoes.txt com a lista atualizada.
     public void salvar(List<Selecao> selecoes) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO));
 
@@ -103,6 +115,7 @@ public class SelecaoRepository {
         writer.close();
     }
 
+    // lê o arquivo de seleções e monta os objetos usados pelo sistema.
     public List<Selecao> carregar() throws IOException {
         List<Selecao> selecoes = new ArrayList<>();
         File arquivo = new File(ARQUIVO);

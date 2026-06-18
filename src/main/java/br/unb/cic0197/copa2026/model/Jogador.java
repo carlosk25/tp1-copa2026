@@ -1,5 +1,9 @@
 package br.unb.cic0197.copa2026.model;
 
+/**
+ * representa um jogador inscrito em uma seleção.
+ * o status indica se ele está disponível ou impedido de participar de partidas.
+ */
 public class Jogador {
     private String id;
     private String nome;
@@ -8,6 +12,8 @@ public class Jogador {
     private int idade;
     private StatusJogador status;
     private Selecao selecao;
+
+    // aTIVO conta como disponível; LESIONADO e SUSPENSO impedem participação na partida.
     public enum StatusJogador {ATIVO, LESIONADO, SUSPENSO }
 
     public Jogador(String id, String nome, String posicao, int numero, int idade, StatusJogador status, Selecao selecao) {

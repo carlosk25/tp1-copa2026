@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// tela de cadastro, edição, busca e listagem de partidas.
 public class TelaPartida extends JPanel {
     private final CopaApp app;
     private final PartidaController partidaController;
@@ -60,47 +61,33 @@ public class TelaPartida extends JPanel {
         atualizarTabela(partidaController.listarPartidas());
     }
 
-    // private void initComponents() {
-    // setLayout(new BorderLayout(15, 15));
-    // setBackground(new Color(245, 247, 250));
-    // setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-    // add(buildHeader(), BorderLayout.NORTH);
-
-    // JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
-    // centerPanel.setOpaque(false);
-
-    // centerPanel.add(buildFormPanel(), BorderLayout.NORTH);
-    // centerPanel.add(buildSearchPanel(), BorderLayout.CENTER);
-    // centerPanel.add(buildTablePanel(), BorderLayout.SOUTH);
-
-    // add(centerPanel, BorderLayout.CENTER);
-    // }
-
+    // organiza a tela em cabeçalho, formulário, filtros e tabela.
     private void initComponents() {
         setLayout(new BorderLayout(15, 15));
         setBackground(new Color(245, 247, 250));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // Cabeçalho no topo
+        // cabeçalho no topo
         add(buildHeader(), BorderLayout.NORTH);
 
-        // Painel central com BoxLayout (empilha verticalmente)
+        // painel central com boxlayout para empilhar os blocos
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
 
-        // Adiciona os painéis em ordem
+        // adiciona os painéis em ordem
         centerPanel.add(buildFormPanel());
-        centerPanel.add(Box.createVerticalStrut(10)); // espaçamento
+        centerPanel.add(Box.createVerticalStrut(10)); // espaço entre formulário e filtros
         centerPanel.add(buildSearchPanel());
-        centerPanel.add(Box.createVerticalStrut(10)); // espaçamento
+        centerPanel.add(Box.createVerticalStrut(10)); // espaço entre filtros e tabela
         centerPanel.add(buildTablePanel());
 
-        // Adiciona ao painel principal
+        // adiciona tudo no painel principal
         add(centerPanel, BorderLayout.CENTER);
     }
 
+    // cria o cabeçalho visual da tela.
     private JPanel buildHeader() {
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -127,6 +114,7 @@ public class TelaPartida extends JPanel {
         return panel;
     }
 
+    // cria o formulário usado para cadastrar ou editar uma partida.
     private JPanel buildFormPanel() {
 
         JPanel container = new JPanel(new BorderLayout(10, 10));
@@ -222,7 +210,7 @@ public class TelaPartida extends JPanel {
         txtEventos.setFont(fieldFont);
 
         // =====================================================
-        // DATA E HORÁRIO
+        // data e horário
         // =====================================================
 
         gbc.gridx = 0;
@@ -239,7 +227,7 @@ public class TelaPartida extends JPanel {
         formPanel.add(txtHorario, gbc);
 
         // =====================================================
-        // ESTÁDIO
+        // estádio
         // =====================================================
 
         gbc.gridx = 0;
@@ -252,7 +240,7 @@ public class TelaPartida extends JPanel {
         gbc.gridwidth = 1;
 
         // =====================================================
-        // EQUIPES
+        // equipes
         // =====================================================
 
         gbc.gridx = 0;
@@ -269,7 +257,7 @@ public class TelaPartida extends JPanel {
         formPanel.add(comboSelecaoB, gbc);
 
         // =====================================================
-        // ÁRBITRO
+        // árbitro
         // =====================================================
 
         gbc.gridx = 0;
@@ -282,7 +270,7 @@ public class TelaPartida extends JPanel {
         gbc.gridwidth = 1;
 
         // =====================================================
-        // FASE E STATUS
+        // fase e status
         // =====================================================
 
         gbc.gridx = 0;
@@ -299,7 +287,7 @@ public class TelaPartida extends JPanel {
         formPanel.add(comboStatus, gbc);
 
         // =====================================================
-        // PLACAR
+        // placar
         // =====================================================
 
         gbc.gridx = 0;
@@ -329,7 +317,7 @@ public class TelaPartida extends JPanel {
         gbc.gridwidth = 1;
 
         // =====================================================
-        // EVENTOS
+        // eventos
         // =====================================================
 
         gbc.gridx = 0;
@@ -349,7 +337,7 @@ public class TelaPartida extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
 
         // =====================================================
-        // BOTÕES
+        // botões
         // =====================================================
 
         JPanel buttonPanel = new JPanel(
@@ -418,6 +406,7 @@ public class TelaPartida extends JPanel {
         return container;
     }
 
+    // cria a tabela onde as partidas cadastradas aparecem.
     private JPanel buildTablePanel() {
 
         JPanel panel = new JPanel(new BorderLayout(10, 10));
@@ -455,7 +444,7 @@ public class TelaPartida extends JPanel {
         table.getSelectionModel()
                 .addListSelectionListener(this::selecionarPartidaNaTabela);
 
-        // Aparência da tabela
+        // aparência da tabela
         table.setRowHeight(34);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 
@@ -471,7 +460,7 @@ public class TelaPartida extends JPanel {
 
         table.setIntercellSpacing(new Dimension(0, 1));
 
-        // Cabeçalho
+        // cabeçalho
         table.getTableHeader().setFont(
                 new Font("Segoe UI", Font.BOLD, 13));
 
@@ -480,7 +469,7 @@ public class TelaPartida extends JPanel {
 
         table.getTableHeader().setReorderingAllowed(false);
 
-        // Oculta ID
+        // oculta id
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
         table.getColumnModel().getColumn(0).setPreferredWidth(0);
@@ -494,6 +483,7 @@ public class TelaPartida extends JPanel {
         return panel;
     }
 
+    // cria os filtros de busca por seleção, fase, data e árbitro.
     private JPanel buildSearchPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Partidas Cadastradas"));
@@ -575,6 +565,7 @@ public class TelaPartida extends JPanel {
         return panel;
     }
 
+    // monta o objeto partida com os dados da tela e envia para o controller.
     private void salvarPartida() {
         String data = txtData.getText().trim();
         String horario = txtHorario.getText().trim();
@@ -652,6 +643,7 @@ public class TelaPartida extends JPanel {
         }
     }
 
+    // exclui a partida selecionada na tabela após confirmação.
     private void excluirPartida() {
         if (partidaSelecionada == null) {
             JOptionPane.showMessageDialog(this, "Selecione uma partida na tabela para excluir.", "Erro",
@@ -674,6 +666,7 @@ public class TelaPartida extends JPanel {
         }
     }
 
+    // aplica os filtros informados e atualiza a tabela.
     private void buscarPartidas() {
         String selecao = (String) comboBuscaSelecao.getSelectedItem();
         FaseCompeticao fase = comboBuscaFase.getSelectedIndex() <= 0 ? null
@@ -684,6 +677,7 @@ public class TelaPartida extends JPanel {
         atualizarTabela(resultado);
     }
 
+    // detecta o clique na tabela e carrega a partida no formulário.
     private void selecionarPartidaNaTabela(ListSelectionEvent event) {
         if (event.getValueIsAdjusting()) {
             return;
@@ -698,6 +692,7 @@ public class TelaPartida extends JPanel {
         partidaController.obterPartidaPorId(id).ifPresent(this::carregarPartidaNoFormulario);
     }
 
+    // preenche o formulário com os dados da partida selecionada.
     private void carregarPartidaNoFormulario(Partida partida) {
         partidaSelecionada = partida;
         txtData.setText(partida.getData());
@@ -720,6 +715,7 @@ public class TelaPartida extends JPanel {
         }
     }
 
+    // redesenha a tabela com a lista recebida.
     private void atualizarTabela(List<Partida> partidas) {
         tableModel.setRowCount(0);
         for (Partida partida : partidas) {
@@ -740,6 +736,7 @@ public class TelaPartida extends JPanel {
         }
     }
 
+    // limpa o formulário e volta para modo de novo cadastro.
     private void limparCampos() {
         partidaSelecionada = null;
         txtData.setText("");

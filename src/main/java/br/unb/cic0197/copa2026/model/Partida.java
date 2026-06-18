@@ -5,6 +5,7 @@ import br.unb.cic0197.copa2026.enums.StatusPartida;
 
 import java.util.UUID;
 
+// representa uma partida cadastrada na competição.
 public class Partida {
     private String id;
     private String data;
@@ -17,10 +18,12 @@ public class Partida {
     private StatusPartida status;
     private ResultadoPartida resultado;
 
+    // cria uma partida nova gerando o id automaticamente.
     public Partida(String data, String horario, String estadio, String selecaoA, String selecaoB, FaseCompeticao fase, StatusPartida status) {
         this(UUID.randomUUID().toString(), data, horario, estadio, selecaoA, selecaoB, null, fase, status, null);
     }
 
+    // construtor usado principalmente quando a partida vem do arquivo txt.
     public Partida(String id, String data, String horario, String estadio, String selecaoA, String selecaoB,
                    Arbitro arbitro, FaseCompeticao fase, StatusPartida status, ResultadoPartida resultado) {
         this.id = id;
@@ -111,10 +114,12 @@ public class Partida {
         this.resultado = resultado;
     }
 
+    // evita erro quando a partida ainda não possui árbitro vinculado.
     public String getArbitroNome() {
         return arbitro != null ? arbitro.getNome() : "";
     }
 
+    // formata o resultado para aparecer na tabela da tela.
     public String getPlacarFormatado() {
         if (resultado == null) {
             return "";

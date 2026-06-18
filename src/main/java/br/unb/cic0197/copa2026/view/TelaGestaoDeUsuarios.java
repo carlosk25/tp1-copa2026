@@ -15,6 +15,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.List;
 
+// tela administrativa para aprovar solicitações e gerenciar usuários.
 public class TelaGestaoDeUsuarios extends JPanel {
     private CopaApp app;
     // aba 1
@@ -31,6 +32,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         initComponents();
     }
 
+    // monta as abas de solicitações pendentes e usuários cadastrados.
     private void initComponents() {
         
         setLayout(new BorderLayout());
@@ -71,7 +73,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         JTabbedPane abasPainel = new JTabbedPane();
         abasPainel.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
-        // Aba 1 : Solicitaçoes pendentes
+        // aba 1: solicitações pendentes
         JPanel painelAba1 = new JPanel(new BorderLayout(10, 10));
         painelAba1.setBackground(Color.WHITE);
 
@@ -114,7 +116,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         painelSulAba1.add(btnVoltarAba1);
         painelAba1.add(painelSulAba1, BorderLayout.SOUTH);
 
-        // Aba 2: usuarios ativos no sistema
+        // aba 2: usuários ativos no sistema
         JPanel painelAba2 = new JPanel(new BorderLayout(10, 10));
         painelAba2.setBackground(Color.WHITE);
 
@@ -178,6 +180,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
     }
 
     
+    // cria a barra de busca usada para filtrar as tabelas.
     private JPanel criarPainelBarraFiltro(TableRowSorter<DefaultTableModel> sorter, int indiceColunaNome, int indiceColunaFuncao) {
         JPanel painelFiltro = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 5));
         painelFiltro.setBackground(Color.WHITE);
@@ -225,6 +228,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
 
     
      
+    // recarrega solicitações e usuários sempre que a tela é aberta.
     public void atualizarTela() {
         modeloSolicitacoes.setRowCount(0);
         try {
@@ -265,6 +269,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
     }
 
 
+    // aprova a solicitação selecionada na tabela.
     private void executarAprovacao() {
         int linhaVisivel = tabelaSolicitacoes.getSelectedRow();
         if (linhaVisivel == -1) {
@@ -299,6 +304,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         }
     }
 
+    // recusa a solicitação selecionada.
     private void executarReprovacao() {
         int linhaVisivel = tabelaSolicitacoes.getSelectedRow();
         if (linhaVisivel == -1) {
@@ -326,6 +332,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         }
     }
 
+    // abre os campos para alterar os dados do usuário selecionado.
     private void executarEdicao() {
         int linhaVisivel = tabelaUsuariosAtivos.getSelectedRow();
         if (linhaVisivel == -1) {
@@ -398,7 +405,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
                     }
                 }
 
-                // 3. Validação do Escopo de Data
+                // validação do escopo de data
                 java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 java.time.LocalDate dataNasc = null;
 
@@ -421,7 +428,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
                     return;
                 }
 
-                // 4. Execução da Atualização passando as variáveis validadas
+                // execução da atualização passando as variáveis validadas
                 UsuarioGerenciador.editarUsuario(
                         emailAtual,
                         novoNome,
@@ -440,6 +447,7 @@ public class TelaGestaoDeUsuarios extends JPanel {
         }
     }
     //executa uma exclusao de solicitaçao
+    // remove o usuário selecionado depois da confirmação.
     private void executarExclusao() {
         int linhaVisivel = tabelaUsuariosAtivos.getSelectedRow();
         if (linhaVisivel == -1) {

@@ -13,6 +13,7 @@ import br.unb.cic0197.copa2026.repository.UsuarioRepository;
 import javax.swing.*;
 import java.awt.*;
 
+// tela principal exibida depois do login.
 public class TelaMenu extends JPanel {
     private CopaApp app;
     private JPanel cardsContainer; 
@@ -22,6 +23,7 @@ public class TelaMenu extends JPanel {
         initComponents();
     }
 
+    // monta o cabeçalho e o espaço onde os cards do menu aparecem.
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 247, 250));
@@ -67,6 +69,7 @@ public class TelaMenu extends JPanel {
     }
 
 
+    // monta os cards de acordo com o perfil do usuário logado.
     public void renderizarMenu() {
         cardsContainer.removeAll();
 
@@ -74,7 +77,7 @@ public class TelaMenu extends JPanel {
 
         if (usuarioLogado != null) {
 
-            //recarrega o objeto
+            // recarrega o usuário para pegar permissões atualizadas.
             java.util.Optional<Usuario> usuarioAtualizado =
                     new UsuarioRepository().findById(usuarioLogado.getEmail());
 
@@ -108,6 +111,7 @@ public class TelaMenu extends JPanel {
         cardsContainer.repaint();
     }
 
+    // cria um card clicável que navega para uma tela do sistema.
     private JPanel createCard(String titulo, String tela, Color color) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));

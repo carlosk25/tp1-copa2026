@@ -14,6 +14,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
+// concentra as regras de negócio relacionadas ao cadastro de partidas.
 public class PartidaService {
     private final PartidaRepository repository;
     private final SelecaoService selecaoService;
@@ -29,11 +30,13 @@ public class PartidaService {
         return repository.findAll();
     }
 
+    // valida a partida antes de permitir o cadastro.
     public void salvar(Partida partida) throws Copa2026Exception {
         validarPartida(partida);
         repository.add(partida);
     }
 
+    // valida e confirma se a partida existe antes de atualizar.
     public void atualizar(Partida partida) throws Copa2026Exception {
         validarPartida(partida);
         Optional<Partida> existente = repository.findById(partida.getId());
@@ -43,6 +46,7 @@ public class PartidaService {
         repository.update(partida);
     }
 
+    // impede remover uma partida inválida ou inexistente.
     public void remover(Partida partida) throws Copa2026Exception {
         if (partida == null || partida.getId() == null || partida.getId().isBlank()) {
             throw new Copa2026Exception("Partida inválida para exclusão.");
@@ -66,6 +70,7 @@ public class PartidaService {
         return repository.findAll();
     }
 
+    // valida campos obrigatórios, resultado, agenda e seleções aptas.
     private void validarPartida(Partida partida) throws Copa2026Exception {
         if (partida == null) {
             throw new Copa2026Exception("Partida inválida.");
@@ -100,6 +105,7 @@ public class PartidaService {
         validarConflitosDeAgenda(partida);
     }
 
+    // garante que data e horário estejam nos formatos esperados pela tela.
     private void validarDataHora(String data, String horario) throws Copa2026Exception {
         try {
             LocalDate.parse(data, DATA_FORMATTER);
@@ -114,6 +120,7 @@ public class PartidaService {
         }
     }
 
+    // partida finalizada precisa ter placar e não pode ter gols negativos.
     private void validarResultado(Partida partida) throws Copa2026Exception {
         ResultadoPartida resultado = partida.getResultado();
         if (partida.getStatus() == StatusPartida.FINALIZADA && resultado == null) {
@@ -126,6 +133,7 @@ public class PartidaService {
         }
     }
 
+    // evita duas partidas no mesmo estádio ou com a mesma seleção no mesmo horário.
     private void validarConflitosDeAgenda(Partida partida) throws Copa2026Exception {
         List<Partida> todas = repository.findAll();
         for (Partida existente : todas) {
@@ -150,6 +158,7 @@ public class PartidaService {
         }
     }
 
+    // chama a regra de seleções para impedir times com poucos jogadores disponíveis.
     private void validarSelecoesAptasParaPartida(Partida partida)
             throws Copa2026Exception {
 

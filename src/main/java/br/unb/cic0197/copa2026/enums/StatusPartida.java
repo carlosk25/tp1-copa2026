@@ -1,5 +1,6 @@
 package br.unb.cic0197.copa2026.enums;
 
+// estados possíveis de uma partida dentro do sistema.
 public enum StatusPartida {
     AGENDADA("Agendada"),
     EM_ANDAMENTO("Em andamento"),

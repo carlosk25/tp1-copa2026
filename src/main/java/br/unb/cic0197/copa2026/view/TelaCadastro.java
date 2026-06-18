@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import static br.unb.cic0197.copa2026.controller.UsuarioGerenciador.adicionarSolicitacao;
 
+// tela usada para pedir a criação de uma nova conta.
 public class TelaCadastro extends JPanel {
     private CopaApp app;
     private JTextField nomeField;
@@ -28,6 +29,7 @@ public class TelaCadastro extends JPanel {
         initComponents();
     }
 
+    // monta os campos de cadastro e os botões da tela.
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 245));
@@ -179,6 +181,7 @@ public class TelaCadastro extends JPanel {
     }
 
 
+    // valida os dados e envia a solicitação para aprovação.
     private void finalizarCadastro() {
         String nome = nomeField.getText().trim();
         String email = emailField.getText().trim();
@@ -222,6 +225,7 @@ public class TelaCadastro extends JPanel {
         }
     }
 
+    // confere formato do email, data de nascimento e força mínima da senha.
     private boolean validarCamposCadastro (String email, String dataNascimento,String senha) {
         String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         if (!Pattern.matches(regexEmail, email)) {
@@ -262,6 +266,7 @@ public class TelaCadastro extends JPanel {
         return true;
     }
 
+    // limpa os campos depois que a solicitação é enviada.
     private void limparCampos() {
         nomeField.setText("");
         dataNascimentoField.setText("");

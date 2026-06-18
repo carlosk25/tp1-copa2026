@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// faz a persistência das partidas no arquivo partidas.txt.
 public class PartidaRepository {
     private static final String ARQUIVO = "partidas.txt";
 
+    // carrega todas as partidas salvas no arquivo.
     public List<Partida> findAll() {
         try {
             return carregar();
@@ -22,6 +24,7 @@ public class PartidaRepository {
         }
     }
 
+    // adiciona uma nova partida e regrava o arquivo.
     public void add(Partida partida) {
         try {
             List<Partida> partidas = carregar();
@@ -32,6 +35,7 @@ public class PartidaRepository {
         }
     }
 
+    // procura a partida pelo id e substitui seus dados.
     public void update(Partida partida) {
         try {
             List<Partida> partidas = carregar();
@@ -52,6 +56,7 @@ public class PartidaRepository {
         }
     }
 
+    // remove a partida selecionada pelo id.
     public void delete(Partida partida) {
         try {
             List<Partida> partidas = carregar();
@@ -70,6 +75,7 @@ public class PartidaRepository {
         }
     }
 
+    // filtra partidas sem alterar os dados gravados.
     public List<Partida> search(String selecao, FaseCompeticao fase, String data, String arbitro) {
         try {
             List<Partida> partidas = carregar();
@@ -89,6 +95,7 @@ public class PartidaRepository {
         }
     }
 
+    // lê o arquivo txt e monta os objetos partida.
     private List<Partida> carregar() throws IOException {
         List<Partida> partidas = new ArrayList<>();
         File arquivo = new File(ARQUIVO);
@@ -129,6 +136,7 @@ public class PartidaRepository {
         return partidas;
     }
 
+    // grava todas as partidas novamente no formato separado por ponto e vírgula.
     private void salvar(List<Partida> partidas) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO));
         for (Partida partida : partidas) {
@@ -151,6 +159,7 @@ public class PartidaRepository {
         writer.close();
     }
 
+    // converte o texto do arquivo para o enum de fase.
     private FaseCompeticao parseFase(String faseTexto) {
         try {
             return FaseCompeticao.valueOf(faseTexto);
@@ -159,6 +168,7 @@ public class PartidaRepository {
         }
     }
 
+    // converte o texto do arquivo para o enum de status.
     private StatusPartida parseStatus(String statusTexto) {
         try {
             return StatusPartida.valueOf(statusTexto);

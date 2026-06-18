@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
+// primeira tela do sistema, responsável pela autenticação.
 public class TelaLogin extends JPanel {
     private CopaApp app;
     private JTextField usuarioField;
@@ -22,6 +23,7 @@ public class TelaLogin extends JPanel {
         initComponents();
     }
 
+    // monta os campos de email, senha e os botões de login/cadastro.
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 245));
@@ -62,13 +64,13 @@ public class TelaLogin extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Usuário
+        // usuário
         gbc.gridx = 0; gbc.gridy = 0;
         JLabel lblUser = new JLabel("E-mail:");
         lblUser.setFont(new Font("Segoe UI", Font.BOLD, 13));
         containerBranco.add(lblUser, gbc);
 
-        //  Usuário
+        // usuário
         gbc.gridx = 1;
         usuarioField = new JTextField(20);
         usuarioField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -128,6 +130,7 @@ public class TelaLogin extends JPanel {
         return button;
     }
 
+    // tenta autenticar o usuário e iniciar a sessão.
     private void fazerLogin() {
         String emailInput = usuarioField.getText().trim();
         String senhaInput = new String(senhaField.getPassword());

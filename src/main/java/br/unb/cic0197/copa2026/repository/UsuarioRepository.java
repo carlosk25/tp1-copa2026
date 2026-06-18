@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// cuida da leitura e escrita de usuários e solicitações nos arquivos txt.
 public class UsuarioRepository {
     private static final String ARQUIVO_USERS = "usuarios.txt";
     private static final String ARQUIVO_SOLICITACOES = "solicitacoes.txt";
     private static final String SEPARADOR = "\\|";
 
+    // retorna todos os usuários cadastrados.
     public List<Usuario> findAll() {
         try {
             return carregarUsuarios();
@@ -19,6 +21,7 @@ public class UsuarioRepository {
         }
     }
 
+    // adiciona um usuário novo ao arquivo.
     public void add(Usuario usuario) {
         try {
             List<Usuario> usuarios = carregarUsuarios();
@@ -29,6 +32,7 @@ public class UsuarioRepository {
         }
     }
 
+    // atualiza um usuário usando o email original como chave.
     public void update(String emailOriginal, Usuario usuario) {
         try {
             List<Usuario> usuarios = carregarUsuarios();
@@ -44,6 +48,7 @@ public class UsuarioRepository {
         }
     }
 
+    // remove um usuário existente pelo email.
     public void delete(Usuario usuario) {
         try {
             List<Usuario> usuarios = carregarUsuarios();
@@ -54,12 +59,14 @@ public class UsuarioRepository {
         }
     }
 
+    // busca um usuário pelo email.
     public Optional<Usuario> findById(String email) {
         return findAll().stream()
                 .filter(u -> u.getEmail().equalsIgnoreCase(email))
                 .findFirst();
     }
 
+    // carrega as solicitações de cadastro pendentes.
     public List<SolicitacaoCadastro> findAllSolicitacoes() {
         List<SolicitacaoCadastro> lista = new ArrayList<>();
         File file = new File(ARQUIVO_SOLICITACOES);
@@ -78,6 +85,7 @@ public class UsuarioRepository {
         return lista;
     }
 
+    // regrava a lista de solicitações depois de aprovar ou reprovar.
     public void salvarTodasSolicitacoes(List<SolicitacaoCadastro> lista) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARQUIVO_SOLICITACOES))) {
             for (SolicitacaoCadastro s : lista) {
@@ -91,6 +99,7 @@ public class UsuarioRepository {
     }
 
     
+    // monta os usuários corretos de acordo com o perfil salvo no arquivo.
     private List<Usuario> carregarUsuarios() throws IOException {
         List<Usuario> lista = new ArrayList<>();
         File file = new File(ARQUIVO_USERS);
@@ -124,6 +133,7 @@ public class UsuarioRepository {
         return lista;
     }
 
+    // salva todos os usuários no formato nome;email;senha;data;perfil.
     private void salvarUsuarios(List<Usuario> lista) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARQUIVO_USERS))) {
             for (Usuario u : lista) {

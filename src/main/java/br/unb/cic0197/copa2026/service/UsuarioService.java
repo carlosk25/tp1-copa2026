@@ -11,6 +11,7 @@ import java.util.Optional;
 import br.unb.cic0197.copa2026.model.*;
 import br.unb.cic0197.copa2026.exception.UsuarioInvalidoException;
 
+// concentra as regras de negócio de login, cadastro e gestão de usuários.
 public class UsuarioService {
     private final UsuarioRepository repository;
 
@@ -19,11 +20,12 @@ public class UsuarioService {
         inicializarAdminPadrao();                 
     }
 
+    // garante que o sistema tenha pelo menos um administrador para começar o uso.
     private void inicializarAdminPadrao() {
         String emailAdmin = "master@copa.com";
 
         if (!repository.findById(emailAdmin).isPresent()) {
-            // Cria o administrador usando o construtor correto de 4 argumentos
+            // cria o administrador usando o construtor correto de 4 argumentos
             Administrador adminPadrao = new Administrador(
                     "Administrador Geral",
                     emailAdmin,
@@ -31,7 +33,7 @@ public class UsuarioService {
                     "01/01/1990"
             );
 
-            // Salva usando o método correto do seu repositório (save)
+            // salva usando o método correto do seu repositório (save)
             repository.add(adminPadrao);
             System.out.println("🚀 Admin padrão pré-carregado via Camada de Serviço!");
         }
@@ -42,6 +44,7 @@ public class UsuarioService {
     }
 
 
+    // salva um usuário diretamente no repositório.
     public void salvar(Usuario usuario) {
         if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
             repository.add(usuario);
@@ -55,6 +58,7 @@ public class UsuarioService {
         }
     }
 
+    // valida email e senha informados na tela de login.
     public Usuario autenticar (String email, String senha) throws UsuarioInvalidoException {
         Optional<Usuario> usuarioOpt = repository.findById(email);
         if (!usuarioOpt.isPresent() || !usuarioOpt.get().getSenha().equals(senha)) {
@@ -63,6 +67,7 @@ public class UsuarioService {
         return usuarioOpt.get();
     }
 
+    // cria uma solicitação de cadastro quando o email ainda não existe.
     public void cadastrarSolicitacao(SolicitacaoCadastro solicitacao) throws Exception {
         // verifica se o email já não está em uso no sistema
         if (repository.findById(solicitacao.getEmail()).isPresent()) {
@@ -80,6 +85,7 @@ public class UsuarioService {
     }
 
 
+    // transforma a solicitação aprovada em usuário definitivo.
     public String aprovarSolicitacao(SolicitacaoCadastro solicitacao) {
         // pega a senha real definida pelo usuário no momento do cadastro
         String senhaCadastro = solicitacao.getSenha();
@@ -107,6 +113,7 @@ public class UsuarioService {
         // retorna a própria senha utilizada para fins de exibição na tela
         return senhaCadastro;
     }
+    // remove a solicitação sem criar usuário.
     public void reprovarSolicitacao(SolicitacaoCadastro solicitacao) {
 
         List<SolicitacaoCadastro> solicitacoes = repository.findAllSolicitacoes();
@@ -116,6 +123,7 @@ public class UsuarioService {
         repository.salvarTodasSolicitacoes(solicitacoes);
     }
 
+    // recria o objeto correto conforme o perfil escolhido na edição.
     public void editarUsuario(String nome, String emailOriginal, String emailNovo, String senha, String dataNascimento, boolean primeiroAcesso, String tipoPerfil) {
         Usuario usuarioAtualizado;
 
@@ -131,6 +139,7 @@ public class UsuarioService {
         repository.update(emailOriginal, usuarioAtualizado);
     }
 
+    // remove o usuário encontrado pelo email.
     public void excluirUsuario(String email) {
         // localiza o usuário existente pelo email e remove
         java.util.Optional<Usuario> usuarioOpt = repository.findById(email);

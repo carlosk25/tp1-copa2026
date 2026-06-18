@@ -7,6 +7,10 @@ import br.unb.cic0197.copa2026.service.JogadorService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * controlador de jogadores.
+ * recebe as chamadas da tela e encaminha para o service, mantendo a tela separada das regras de negócio.
+ */
 public class JogadorController {
 
     private final JogadorService jogadorService;
@@ -15,14 +19,17 @@ public class JogadorController {
         this.jogadorService = new JogadorService();
     }
 
+    // lista todos os jogadores cadastrados para alimentar a tabela da tela.
     public List<Jogador> listarJogadores() {
         return jogadorService.obterTodos();
     }
 
+    // salva um novo jogador depois que o Service valida as regras de negócio.
     public void salvarJogador(Jogador jogador) throws Copa2026Exception {
         jogadorService.salvar(jogador);
     }
 
+    // atualiza um jogador já existente, preservando o mesmo ID.
     public void atualizarJogador(Jogador jogador) throws Copa2026Exception {
         jogadorService.atualizar(jogador);
     }
@@ -48,6 +55,7 @@ public class JogadorController {
 
         return Optional.empty();
     }
+    // aplica os filtros usados na tela: posição, seleção, status, camisa e idade.
     public List<Jogador> buscarJogadores(
             String posicao,
             String paisSelecao,

@@ -22,7 +22,7 @@ public class NavegacaoController {
     public boolean navegarPara(String nomeTela) {
         Usuario logado = SessaoSistema.getUsuarioLogado();
 
-        // Bloqueio para Organizador
+        // bloqueio para organizador
         if (nomeTela.equalsIgnoreCase("arbitros") || nomeTela.equalsIgnoreCase("relatorios")) {
             if (logado instanceof Organizador) {
                 JOptionPane.showMessageDialog(app,
@@ -32,7 +32,7 @@ public class NavegacaoController {
             }
         }
 
-        // Bloqueio para Gestão de Usuários (Apenas Admin)
+        // bloqueio para gestão de usuários (apenas admin)
         if (nomeTela.equalsIgnoreCase("gestaoUsuarios")) {
             if (app.getTelaGestaoDeUsuarios() != null) {
                 app.getTelaGestaoDeUsuarios().atualizarTela();
@@ -42,7 +42,7 @@ public class NavegacaoController {
             }
         }
 
-        // Atualizações automáticas antes de abrir a tela correspondente
+        // atualizações automáticas antes de abrir a tela correspondente
         if (nomeTela.equalsIgnoreCase("menu") && app.getTelaMenu() != null) {
             app.getTelaMenu().renderizarMenu();
         }

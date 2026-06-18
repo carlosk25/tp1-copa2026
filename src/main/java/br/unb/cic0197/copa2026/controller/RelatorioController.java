@@ -5,6 +5,7 @@ import br.unb.cic0197.copa2026.service.JogadorService;
 import java.util.ArrayList;
 import java.util.List;
 
+// controlador usado para montar os dados que aparecem na tela de relatórios.
 public class RelatorioController {
     private final PartidaService partidaService;
     private final JogadorService jogadorService;
@@ -14,6 +15,7 @@ public class RelatorioController {
         this.jogadorService = new JogadorService();
     }
 
+    // monta uma lista genérica de linhas para a tabela do relatório.
     public List<Object[]> obterDadosConsolidados() {
         List<Object[]> dadosTabela = new ArrayList<>();
 
@@ -22,7 +24,7 @@ public class RelatorioController {
             
             List<br.unb.cic0197.copa2026.model.Partida> partidas = partidaService.obterTodas();
 
-            // Linha de métrica global (Resumo)
+            // adiciona uma linha de resumo geral da competição.
             dadosTabela.add(new Object[]{
                     "MÉTRICA GLOBAL",
                     "Total de Partidas da Competição",
@@ -35,7 +37,7 @@ public class RelatorioController {
             for (br.unb.cic0197.copa2026.model.Partida p : partidas) {
                 dadosTabela.add(new Object[]{
                         "PARTIDA",
-                        p.getSelecaoA() + " x " + p.getSelecaoB(), // Envolvendo as seleções
+                        p.getSelecaoA() + " x " + p.getSelecaoB(), // mostra o confronto entre as seleções
                         "Fase: " + p.getFase(),
 
                         p.getData()

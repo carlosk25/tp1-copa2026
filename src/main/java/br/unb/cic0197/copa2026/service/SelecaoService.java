@@ -9,6 +9,10 @@ import br.unb.cic0197.copa2026.repository.JogadorRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * camada de regras de negócio das seleções.
+ * centraliza validações de cadastro, exclusão e aptidão para partidas.
+ */
 public class SelecaoService {
 
     private final SelecaoRepository repository;
@@ -23,12 +27,14 @@ public class SelecaoService {
         return repository.findAll();
     }
 
+    // cadastra uma seleção depois de validar campos obrigatórios e duplicidade de país.
     public void salvar(Selecao selecao) throws Copa2026Exception {
         validarSelecao(selecao);
         validarSelecaoDuplicada(selecao);
         repository.add(selecao);
     }
 
+    // atualiza uma seleção existente, mantendo o mesmo ID.
     public void atualizar(Selecao selecao) throws Copa2026Exception {
         validarSelecao(selecao);
         validarSelecaoDuplicada(selecao);
@@ -42,6 +48,7 @@ public class SelecaoService {
         repository.update(selecao);
     }
 
+    // exclui a seleção somente se ela existir e não possuir jogadores vinculados.
     public void remover(Selecao selecao) throws Copa2026Exception {
         if (selecao == null || selecao.getId() == null || selecao.getId().isBlank()) {
             throw new Copa2026Exception("Seleção inválida para exclusão.");
@@ -74,6 +81,7 @@ public class SelecaoService {
         return repository.findByPais(pais);
     }
 
+    // valida os campos obrigatórios da seleção.
     public void validarSelecao(Selecao selecao) throws Copa2026Exception {
         if (selecao == null) {
             throw new Copa2026Exception("Seleção inválida.");
@@ -92,6 +100,7 @@ public class SelecaoService {
         }
     }
 
+    // impede cadastrar ou editar uma seleção para um país que já existe em outro registro.
     private void validarSelecaoDuplicada(Selecao selecao)
             throws Copa2026Exception {
 
@@ -112,6 +121,7 @@ public class SelecaoService {
     }
 
 
+    // regra de integridade: não permite excluir seleção que ainda possui jogadores associados.
     private void validarSelecaoSemJogadoresVinculados(Selecao selecao)
             throws Copa2026Exception {
 
@@ -126,6 +136,7 @@ public class SelecaoService {
         }
     }
 
+    // valida a quantidade total de jogadores quando for necessário checar o elenco completo.
     public void validarElencoCompleto(Selecao selecao)
             throws Copa2026Exception {
 
@@ -144,6 +155,9 @@ public class SelecaoService {
         }
     }
 
+    // validação chamada pela parte de partidas.
+    // a seleção precisa ter 16 a 26 jogadores cadastrados e pelo menos 16 ATIVOS.
+    // jogadores LESIONADOS ou SUSPENSOS não contam como disponíveis para jogar.
     public void validarSelecaoAptaParaPartida(String paisSelecao)
             throws Copa2026Exception {
 

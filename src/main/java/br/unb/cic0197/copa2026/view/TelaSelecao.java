@@ -14,6 +14,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * tela de gerenciamento de seleções.
+ * a interface chama o controller, enquanto regras de cadastro e exclusão ficam no service.
+ */
 public class TelaSelecao extends JPanel {
 
     private final CopaApp app;
@@ -27,12 +31,14 @@ public class TelaSelecao extends JPanel {
     private DefaultTableModel tableModel;
     private JTable table;
 
+    // grupos da Copa usados no cadastro das seleções.
     private static final String[] GRUPOS = {
             "Grupo A", "Grupo B", "Grupo C", "Grupo D",
             "Grupo E", "Grupo F", "Grupo G", "Grupo H",
             "Grupo I", "Grupo J", "Grupo K", "Grupo L"
     };
 
+    // o filtro inclui "Todos" para listar seleções sem restringir grupo.
     private static final String[] GRUPOS_FILTRO = {
             "Todos", "Grupo A", "Grupo B", "Grupo C", "Grupo D",
             "Grupo E", "Grupo F", "Grupo G", "Grupo H",
@@ -47,6 +53,7 @@ public class TelaSelecao extends JPanel {
         atualizarTabela(selecaoController.listarSelecoes());
     }
 
+    // monta a tela em três partes: formulário, filtro e tabela.
     private void initComponents() {
         setLayout(new BorderLayout(15, 15));
         setBackground(new Color(245, 247, 250));
@@ -87,6 +94,7 @@ public class TelaSelecao extends JPanel {
         return panel;
     }
 
+    // formulário usado tanto para cadastrar quanto para editar seleções.
     private JPanel buildFormPanel() {
         JPanel container = new JPanel(new BorderLayout(10, 10));
         container.setOpaque(false);
@@ -167,6 +175,7 @@ public class TelaSelecao extends JPanel {
         return container;
     }
 
+    // painel de filtro por grupo.
     private JPanel buildSearchPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
@@ -212,6 +221,7 @@ public class TelaSelecao extends JPanel {
         return panel;
     }
 
+    // tabela de seleções. O ID fica escondido para permitir edição/exclusão correta.
     private JPanel buildTablePanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBackground(new Color(245, 247, 250));
@@ -257,6 +267,7 @@ public class TelaSelecao extends JPanel {
         return panel;
     }
 
+    // decide entre cadastro e edição conforme existe ou não seleção selecionada na tabela.
     private void salvarSelecao() {
         String pais = txtPais.getText().trim();
         String grupo = (String) comboGrupo.getSelectedItem();
@@ -295,6 +306,7 @@ public class TelaSelecao extends JPanel {
         }
     }
 
+    // exclui a seleção selecionada, respeitando a regra de não excluir seleção com jogadores vinculados.
     private void excluirSelecao() {
         if (selecaoSelecionada == null) {
             JOptionPane.showMessageDialog(this,
@@ -329,6 +341,7 @@ public class TelaSelecao extends JPanel {
         }
     }
 
+    // aplica o filtro de grupo e atualiza a tabela.
     private void buscarSelecoes() {
         String grupo = (String) comboFiltroGrupo.getSelectedItem();
 
@@ -342,6 +355,7 @@ public class TelaSelecao extends JPanel {
         atualizarTabela(resultado);
     }
 
+    // quando o usuário seleciona uma linha, a seleção é localizada pelo ID escondido na tabela.
     private void selecionarSelecaoNaTabela(ListSelectionEvent event) {
         if (event.getValueIsAdjusting()) {
             return;
@@ -372,6 +386,7 @@ public class TelaSelecao extends JPanel {
         txtTecnico.setText(selecao.getTecnico());
     }
 
+    // ordena por grupo e país para facilitar a leitura durante a apresentação.
     private void atualizarTabela(List<Selecao> selecoes) {
         List<Selecao> ordenadas = new ArrayList<>(selecoes);
         ordenadas.sort(
@@ -389,6 +404,7 @@ public class TelaSelecao extends JPanel {
         }
     }
 
+    // limpa o formulário e volta para o modo de novo cadastro.
     private void limparCampos() {
         selecaoSelecionada = null;
         txtPais.setText("");

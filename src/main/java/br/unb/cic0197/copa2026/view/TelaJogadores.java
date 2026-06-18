@@ -16,6 +16,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * tela de gerenciamento de jogadores.
+ * responsável apenas pela interface: os dados são enviados ao controller,
+ * e as validações ficam no Service.
+ */
 public class TelaJogadores extends JPanel {
 
     private final CopaApp app;
@@ -39,6 +44,7 @@ public class TelaJogadores extends JPanel {
     private DefaultTableModel tableModel;
     private JTable table;
 
+    // posições disponíveis no cadastro de jogadores.
     private static final String[] POSICOES = {
             "Goleiro",
             "Lateral Esquerdo",
@@ -54,6 +60,7 @@ public class TelaJogadores extends JPanel {
             "Segundo Atacante"
     };
 
+    // filtro possui a opção "Todas" para permitir consulta sem restringir posição.
     private static final String[] POSICOES_FILTRO = {
             "Todas",
             "Goleiro",
@@ -79,6 +86,7 @@ public class TelaJogadores extends JPanel {
         atualizarTabela(jogadorController.listarJogadores());
     }
 
+    // monta a tela em três partes: formulário, filtros e tabela.
     private void initComponents() {
         setLayout(new BorderLayout(15, 15));
         setBackground(new Color(245, 247, 250));
@@ -86,6 +94,7 @@ public class TelaJogadores extends JPanel {
 
         add(buildHeader(), BorderLayout.NORTH);
 
+        // gridBagLayout evita que a tabela engula os campos de filtro em telas menores.
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
 
@@ -136,6 +145,7 @@ public class TelaJogadores extends JPanel {
         return panel;
     }
 
+    // formulário usado tanto para cadastrar quanto para editar jogadores.
     private JPanel buildFormPanel() {
         JPanel container = new JPanel(new BorderLayout(10, 10));
         container.setOpaque(false);
@@ -243,6 +253,7 @@ public class TelaJogadores extends JPanel {
         return container;
     }
 
+    // painel de consulta com filtros combinados.
     private JPanel buildSearchPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
@@ -330,6 +341,7 @@ public class TelaJogadores extends JPanel {
         return panel;
     }
 
+    // tabela de listagem. Ao selecionar uma linha, os dados são carregados no formulário.
     private JPanel buildTablePanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBackground(new Color(245, 247, 250));
@@ -378,6 +390,7 @@ public class TelaJogadores extends JPanel {
         return panel;
     }
 
+    // decide entre cadastro e edição conforme existe ou não jogador selecionado na tabela.
     private void salvarJogador() {
         String nome = txtNome.getText().trim();
         String posicao = (String) comboPosicao.getSelectedItem();
@@ -451,6 +464,7 @@ public class TelaJogadores extends JPanel {
         }
     }
 
+    // exclui o jogador atualmente selecionado na tabela.
     private void excluirJogador() {
         if (jogadorSelecionado == null) {
             JOptionPane.showMessageDialog(this,
@@ -485,6 +499,7 @@ public class TelaJogadores extends JPanel {
         }
     }
 
+    // converte os campos de filtro da tela e atualiza a tabela com o resultado.
     private void buscarJogadores() {
         String posicao = (String) comboFiltroPosicao.getSelectedItem();
         String selecao = (String) comboFiltroSelecao.getSelectedItem();
@@ -543,6 +558,7 @@ public class TelaJogadores extends JPanel {
         atualizarTabela(jogadorController.listarJogadores());
     }
 
+    // quando o usuário seleciona uma linha, o jogador é localizado pelo ID escondido na tabela.
     private void selecionarJogadorNaTabela(ListSelectionEvent event) {
         if (event.getValueIsAdjusting()) {
             return;
@@ -579,6 +595,7 @@ public class TelaJogadores extends JPanel {
         }
     }
 
+    // ordena os jogadores por nome antes de exibir na tabela.
     private void atualizarTabela(List<Jogador> jogadores) {
         List<Jogador> ordenados = new ArrayList<>(jogadores);
         ordenados.sort(
@@ -606,6 +623,7 @@ public class TelaJogadores extends JPanel {
         }
     }
 
+    // limpa o formulário e remove a seleção atual, voltando para modo de novo cadastro.
     private void limparCampos() {
         jogadorSelecionado = null;
         txtNome.setText("");
@@ -621,6 +639,7 @@ public class TelaJogadores extends JPanel {
         }
     }
 
+    // recarrega combos de seleção. No filtro, inclui a opção "Todas"; no cadastro, lista apenas seleções reais.
     private void atualizarComboSelecao(JComboBox<String> combo, boolean incluirTodas) {
         combo.removeAllItems();
 
