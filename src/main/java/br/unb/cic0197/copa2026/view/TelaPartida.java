@@ -60,20 +60,44 @@ public class TelaPartida extends JPanel {
         atualizarTabela(partidaController.listarPartidas());
     }
 
+    // private void initComponents() {
+    // setLayout(new BorderLayout(15, 15));
+    // setBackground(new Color(245, 247, 250));
+    // setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+    // add(buildHeader(), BorderLayout.NORTH);
+
+    // JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+    // centerPanel.setOpaque(false);
+
+    // centerPanel.add(buildFormPanel(), BorderLayout.NORTH);
+    // centerPanel.add(buildSearchPanel(), BorderLayout.CENTER);
+    // centerPanel.add(buildTablePanel(), BorderLayout.SOUTH);
+
+    // add(centerPanel, BorderLayout.CENTER);
+    // }
+
     private void initComponents() {
         setLayout(new BorderLayout(15, 15));
         setBackground(new Color(245, 247, 250));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
+        // Cabeçalho no topo
         add(buildHeader(), BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        // Painel central com BoxLayout (empilha verticalmente)
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
 
-        centerPanel.add(buildFormPanel(), BorderLayout.NORTH);
-        centerPanel.add(buildSearchPanel(), BorderLayout.CENTER);
-        centerPanel.add(buildTablePanel(), BorderLayout.SOUTH);
+        // Adiciona os painéis em ordem
+        centerPanel.add(buildFormPanel());
+        centerPanel.add(Box.createVerticalStrut(10)); // espaçamento
+        centerPanel.add(buildSearchPanel());
+        centerPanel.add(Box.createVerticalStrut(10)); // espaçamento
+        centerPanel.add(buildTablePanel());
 
+        // Adiciona ao painel principal
         add(centerPanel, BorderLayout.CENTER);
     }
 
