@@ -7,7 +7,7 @@ import java.util.List;
 import br.unb.cic0197.copa2026.exception.UsuarioInvalidoException;
 
 
-public class UsuarioGerenciador {
+public class    UsuarioGerenciador {
 
     private static final UsuarioService usuarioService = new UsuarioService();
 
@@ -26,7 +26,7 @@ public class UsuarioGerenciador {
 
 
     public static void editarUsuario(String emailOriginal, String nome, String emailNovo, String dataNascimento, String senha, String tipoPerfil) {
-        usuarioService.editarUsuario(nome, emailOriginal, senha, dataNascimento, false, tipoPerfil);
+        usuarioService.editarUsuario(nome, emailOriginal, emailNovo, senha, dataNascimento, false, tipoPerfil);
     }
 
     public static void excluirUsuario(String email) {
@@ -51,6 +51,5 @@ public class UsuarioGerenciador {
 
         usuarioService.reprovarSolicitacao(solicitacao);
     }
-}
 
 
