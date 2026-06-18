@@ -34,7 +34,7 @@ src/main/java/br/unb/cic0197/copa2026/
 
 ```bash
    mvn clean compile
-   java -cp target/classes br.unb.cic0197.copa2026.app.Main
+   mvn exec:java
 ```
 
 ## Equipe

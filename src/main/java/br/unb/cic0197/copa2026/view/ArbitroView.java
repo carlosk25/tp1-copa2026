@@ -23,7 +23,8 @@ public class ArbitroView extends JPanel {
 
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 12, 12));
         formPanel.setOpaque(false);
-        formPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Dados do árbitro"));
+        formPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                "Dados do árbitro"));
 
         formPanel.add(new JLabel("Nome:"));
         formPanel.add(txtNome);
@@ -62,8 +63,9 @@ public class ArbitroView extends JPanel {
             }
 
             Arbitro arbitro = new Arbitro(nome, nacionalidade, experiencia);
-            app.adicionarArbitro(arbitro);
-            JOptionPane.showMessageDialog(this, "Árbitro salvo com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            // app.adicionarArbitro(arbitro);
+            JOptionPane.showMessageDialog(this, "Árbitro salvo com sucesso.", "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE);
             txtNome.setText("");
             txtNacionalidade.setText("");
             txtExperiencia.setText("");

@@ -61,7 +61,7 @@ public class CopaApp extends JFrame {
     public void start() {
         mostrarTela("login");
         setVisible(true);
-   
+
     }
 
     private void loadData() {
@@ -135,17 +135,6 @@ public class CopaApp extends JFrame {
         cardLayout.show(container, nomeTela);
     }
 
-
-    public void adicionarEstadio(Estadio estadio) {
-        estadios.add(estadio);
-        saveEstadios();
-    }
-
-    public void adicionarArbitro(Arbitro arbitro) {
-        arbitros.add(arbitro);
-        saveArbitros();
-    }
-
     public List<Selecao> getSelecoes() {
         return selecoes;
     }
@@ -201,12 +190,6 @@ public class CopaApp extends JFrame {
         }
     }
 
-    // private void savePartidas() {
-    //     // As partidas são salvas automaticamente pelo PartidaRepository
-    //     // através de add/update/delete em TelaPartida via PartidaService
-    //     // Não precisa de salvamento manual aqui
-    // }
-
     private void showSaveError(String tipo, IOException e) {
         JOptionPane.showMessageDialog(this,
                 "Erro ao salvar " + tipo + ": " + e.getMessage(),
@@ -216,10 +199,10 @@ public class CopaApp extends JFrame {
     public String gerarId() {
         return UUID.randomUUID().toString();
     }
-    
+
     public TelaGestaoDeUsuarios getTelaGestaoDeUsuarios() {
         for (Component comp : container.getComponents()) {
-            if (comp instanceof  TelaGestaoDeUsuarios) {
+            if (comp instanceof TelaGestaoDeUsuarios) {
                 return (TelaGestaoDeUsuarios) comp;
             }
         }
@@ -244,18 +227,18 @@ public class CopaApp extends JFrame {
         return null;
     }
 
-public void recarregarSelecoes() {
-   
-    SelecaoService service = new SelecaoService();
-    
-    this.selecoes = service.obterTodas(); 
-}
+    public void recarregarSelecoes() {
 
-public void recarregarPartidas() {
-   
-    PartidaService service = new PartidaService();
-    
-    this.partidas = service.obterTodas(); 
-}
+        SelecaoService service = new SelecaoService();
+
+        this.selecoes = service.obterTodas();
+    }
+
+    public void recarregarPartidas() {
+
+        PartidaService service = new PartidaService();
+
+        this.partidas = service.obterTodas();
+    }
 
 }

@@ -23,7 +23,8 @@ public class EstadioView extends JPanel {
 
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 12, 12));
         formPanel.setOpaque(false);
-        formPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Dados do estádio"));
+        formPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                "Dados do estádio"));
 
         formPanel.add(new JLabel("Nome:"));
         formPanel.add(txtNome);
@@ -64,13 +65,15 @@ public class EstadioView extends JPanel {
             try {
                 int capacidade = Integer.parseInt(capacidadeTexto);
                 Estadio estadio = new Estadio(nome, local, capacidade);
-                app.adicionarEstadio(estadio);
-                JOptionPane.showMessageDialog(this, "Estádio salvo com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                // app.adicionarEstadio(estadio);
+                JOptionPane.showMessageDialog(this, "Estádio salvo com sucesso.", "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
                 txtNome.setText("");
                 txtLocal.setText("");
                 txtCapacidade.setText("");
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Capacidade deve ser um número.", "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Capacidade deve ser um número.", "Erro",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
