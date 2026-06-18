@@ -29,11 +29,11 @@ public class UsuarioRepository {
         }
     }
 
-    public void update(Usuario usuario) {
+    public void update(String emailOriginal, Usuario usuario) {
         try {
             List<Usuario> usuarios = carregarUsuarios();
             for (int i = 0; i < usuarios.size(); i++) {
-                if (usuarios.get(i).getEmail().equalsIgnoreCase(usuario.getEmail())) {
+                if (usuarios.get(i).getEmail().equalsIgnoreCase(emailOriginal)) {
                     usuarios.set(i, usuario);
                     break;
                 }
