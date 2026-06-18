@@ -1,8 +1,13 @@
-dd33039f-5e7a-419b-bdb0-74d98b5e8cca;Brasil;Grupo 1;Ancelotti
-b1f4c31d-7c4f-42a0-a12d-123456789001;Argentina;Grupo 1;Scaloni
-c2a8f72e-3d9a-41b2-8d30-123456789002;França;Grupo 2;Deschamps
-d9e1a5b0-6a4f-48c1-9b22-123456789003;Espanha;Grupo 2;De la Fuente
-e7b2c8a1-5f10-4b77-8c91-123456789004;Alemanha;Grupo 3;Nagelsmann
-f4c3d2e1-8a9b-40c5-9177-123456789005;Portugal;Grupo 3;Roberto Martínez
-a8b7c6d5-4e3f-42a1-9d88-123456789006;Inglaterra;Grupo 4;Tuchel
-f9e8d7c6-5b4a-4312-8c77-123456789007;Itália;Grupo 4;Spalletti
+dd33039f-5e7a-419b-bdb0-74d98b5e8cca;Brasil;Grupo C;Carlo Ancelotti
+b1f4c31d-7c4f-42a0-a12d-123456789001;Argentina;Grupo J;Lionel Scaloni
+c2a8f72e-3d9a-41b2-8d30-123456789002;França;Grupo I;Didier Deschamps
+d9e1a5b0-6a4f-48c1-9b22-123456789003;Espanha;Grupo H;Luis de la Fuente
+e7b2c8a1-5f10-4b77-8c91-123456789004;Alemanha;Grupo E;Julian Nagelsmann
+f4c3d2e1-8a9b-40c5-9177-123456789005;Portugal;Grupo L;Roberto Martínez
+a8b7c6d5-4e3f-42a1-9d88-123456789006;Inglaterra;Grupo L;Thomas Tuchel
+g7h6i5j4-3k2l-41m2-9n77-123456789008;Holanda;Grupo F;Ronald Koeman
+h8i7j6k5-4l3m-42n3-9o88-123456789009;Uruguai;Grupo K;Marcelo Bielsa
+i9j8k7l6-5m4n-43o4-9p99-123456789010;Colômbia;Grupo K;Néstor Lorenzo
+j0k9l8m7-6n5o-44p5-9q00-123456789011;México;Grupo A;Jaime Lozano
+k1l0m9n8-7o6p-45q6-9r11-123456789012;Estados Unidos;Grupo D;Gregg Berhalter
+l2m1n0o9-8p7q-46r7-9s22-123456789013;Canadá;Grupo B;Jesse Marsch
